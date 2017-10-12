@@ -10,7 +10,6 @@ ifeq ($(OS),"Linux")
 	LD_LIBRARY_PATH := $(LD_LIBRARY_PATH):$(HOME)/malloc
 endif
 
-
 NAME=libft_malloc_$(HOSTTYPE).so
 
 CCFLAGS= -Wall -Wextra -Werror 
@@ -41,7 +40,7 @@ test: all
 
 $(NAME): $(OBJ)
 	@make -C $(DIR_LIBFT)
-	@gcc $^ -shared -o $@ $(INCLUDE)\
+	@gcc $^ -shared -o $@ $(INCLUDE) \
 	$(LIBFT) $(LPTHREAD) $(CCFLAGS)
 	@ln -sf $(NAME) libft_malloc.so
 

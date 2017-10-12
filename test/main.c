@@ -325,6 +325,7 @@ int			test_13_realloc_inf(const char *s){
 	//show_alloc_mem();
 	free(buf);
 	//show_alloc_mem();
+	return (1);
 }
 
 int			test_14_realloc_null_size(const char *s){
@@ -363,8 +364,9 @@ int			test_15_realloc_null_ptr(const char *s){
 
 int		main() {
 
-	test_0_basic();
-/*	test_1_fork();
+	void *p = malloc(8);
+/*	test_0_basic();
+	test_1_fork();
 	test_2_fork();
 	test_3_strcat();
 	test_4_strdup("coucou");
@@ -378,6 +380,7 @@ int		main() {
 	test_12_malloc_realloc("salut12");
 	test_13_realloc_inf("lalala");
 	test_14_realloc_null_size("le test 14");
-	test_15_realloc_null_ptr("le test 15");*/
+	test_15_realloc_null_ptr("le test 15");
+*/
 	return (1);
 }
