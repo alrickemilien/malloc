@@ -2,13 +2,14 @@
  *		Tests pour malloc
  */
 
-#include <unistd.h>
-#include <sys/mman.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+# include <unistd.h>
+# include <sys/mman.h>
+# include <stdio.h>
+# include <string.h>
+# include <stdlib.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include "../src/include/malloc.h"
 
 
 int			test_0_basic(){
@@ -365,6 +366,7 @@ int			test_15_realloc_null_ptr(const char *s){
 int		main() {
 
 	void *p = malloc(8);
+	show_alloc_mem();
 /*	test_0_basic();
 	test_1_fork();
 	test_2_fork();

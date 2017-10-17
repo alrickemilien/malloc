@@ -24,7 +24,8 @@ SRC=src/lib.c\
 	src/show_alloc_mem.c\
 	src/malloc/malloc.c\
 	src/free/free.c\
-	src/realloc/realloc.c
+	src/realloc/realloc.c\
+	src/print_memory.c\
 
 OBJ=$(SRC:.c=.o)
 
