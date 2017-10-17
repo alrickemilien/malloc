@@ -7,12 +7,18 @@
 
 #include "malloc.h"
 
-void	new_block(size_t size)
+void	*new_block(size_t size)
 {
-	mmap(0, 
+	t__malloc_block__	*ptr;
+	
+	ptr = mmap(0, 
 		size + sizeof(t__malloc_block__),
-		PROT_RED | PROT_WRITE,
-		MAP_ANON | MAP_PRIVATE);
+		PROT_READ | PROT_WRITE,
+		MAP_ANON | MAP_PRIVATE,
+		-1, 0);
+	ptr->size = size;
+	ptr->is_free = 0;
+	return ((void*)ptr);
 }
 
 void	*malloc(size_t size)
@@ -22,9 +28,15 @@ void	*malloc(size_t size)
 	(void)size;
 
 	init();
-	ft_putnbr(g__malloc_instance__.options.tiny_zone_size );
-	write(1, "\n", 1);
-	ft_putnbr(g__malloc_instance__.options.tiny_zone_size - sizeof(t__malloc_block__));
+	if (!g__malloc_instance__.tiny_zone)
+	{
+		g__malloc_instance__.tiny_zone = new_block(g__malloc_instance__.options.tiny_zone_size);
+		g__malloc_instance__.tiny_zone->is_free = 1;
+	}
+	ft_putnbr(sizeof(t__malloc_block__));
+/*	if (size < __MALLOC_TINY_LIMIT__)
+	{
 
+	}*/
 	return (NULL);
 }

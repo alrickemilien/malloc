@@ -366,7 +366,7 @@ int			test_15_realloc_null_ptr(const char *s){
 int		main() {
 
 	void *p = malloc(8);
-	show_alloc_mem();
+//	show_alloc_mem();
 /*	test_0_basic();
 	test_1_fork();
 	test_2_fork();

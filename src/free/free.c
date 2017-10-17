@@ -2,6 +2,9 @@
 
 void	free(void *ptr)
 {
-	(void)ptr;
-	return;
+	if (!ptr) {
+		return;
+	}
+	((t__malloc_block__*)ptr)->is_free = 0;
+	return ;
 }
