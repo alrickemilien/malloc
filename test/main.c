@@ -9,6 +9,7 @@
 # include <stdlib.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include "../libft/libft.h"
 # include "../src/include/malloc.h"
 
 
@@ -365,7 +366,16 @@ int			test_15_realloc_null_ptr(const char *s){
 
 int		main() {
 
-	void *p = malloc(8);
+	int		i = 0;
+	char *p = (char*)malloc(8);
+	while (i < 8)
+	{
+		p[i] = 'x';
+		i++;
+	}
+	p[8] = 0;
+	ft_putendl(p);
+	show_alloc_mem();
 //	show_alloc_mem();
 /*	test_0_basic();
 	test_1_fork();

@@ -49,6 +49,7 @@ void	init()
 	int		page_size;
 
 	page_size = getpagesize();
+	ft_bzero(&g__malloc_instance__, sizeof(g__malloc_instance__));
 	g__malloc_instance__.options.absolute_max_size = SIZE_MAX - (2 * page_size);
 	g__malloc_instance__.options.tiny_zone_size = page_size;
 	g__malloc_instance__.options.small_zone_size = page_size;

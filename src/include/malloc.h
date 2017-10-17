@@ -45,7 +45,7 @@
 
 typedef struct	s__malloc_block__
 {
-	int							size;
+	size_t						size;
 	int							is_free;
 	struct s__malloc_block__	*next;
 }				t__malloc_block__;
@@ -57,12 +57,20 @@ typedef struct	s__malloc_options__
 	int				absolute_max_size;
 }				t__malloc_options__;
 
+typedef struct	s__malloc_addr__
+{
+	void			*addr;
+}				t__malloc_addr__;
+
 struct	s__malloc_instance__
 {
 		t__malloc_options__		options;
 		t__malloc_block__		*tiny_zone;
 		t__malloc_block__		*small_zone;
 		t__malloc_block__		*large_zone;
+		t__malloc_addr__		tiny_zone_addr;
+		t__malloc_addr__		small_zone_addr;
+		t__malloc_addr__		large_zone_addr;
 };
 
 struct	s__malloc_thread_safe__
@@ -72,6 +80,7 @@ struct	s__malloc_thread_safe__
 
 void	init(void);
 void	print_memory(void *ptr, size_t size);
+void	*new_zone(size_t size);
 void	show_alloc_mem(void);
 
 #endif
