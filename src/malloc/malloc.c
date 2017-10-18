@@ -25,9 +25,6 @@ void	*new_block(t__malloc_block__ *block, size_t size)
 		}
 		tmp = tmp->next;
 	}
-	(void)block;
-	(void)size;
-
 	return (NULL);
 }
 
