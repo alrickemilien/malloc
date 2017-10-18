@@ -5,6 +5,7 @@
 # include <sys/mman.h>
 # include <sys/resource.h>
 # include <stdio.h>
+# include <pthread.h>
 # include <stdint.h>
 # define G_MALLOC						g__malloc_instance__
 
@@ -57,11 +58,6 @@ typedef struct	s__malloc_options__
 	int				absolute_max_size;
 }				t__malloc_options__;
 
-typedef struct	s__malloc_addr__
-{
-	void			*addr;
-}				t__malloc_addr__;
-
 struct	s__malloc_instance__
 {
 		int						is_init;
@@ -76,7 +72,7 @@ struct	s__malloc_instance__
 
 struct	s__malloc_thread_safe__
 {
-	int		o;
+	pthread_t	self;
 };
 
 void	init(void);

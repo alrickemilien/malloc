@@ -8,6 +8,15 @@ struct s__malloc_thread_safe__		g__malloc_thread_safe__;
  *								G_MALLOC
  */
 
+/*							THRED SAFE FUNCTIONS
+ *							http://www.yolinux.com/TUTORIALS/LinuxTutorialPosixThreads.html
+ *
+ *					pthread_self()
+ *
+ *
+ */
+
+
 /*
    int		getrlimit(int resource, struct rlimit *rlp);
 

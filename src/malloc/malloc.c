@@ -40,6 +40,7 @@ void	*malloc(size_t size)
 	extern char **environ;
 	extern struct s__malloc_instance__ g__malloc_instance__;
 
+	ft_putnbr((unsigned long)pthread_self());
 	if (!g__malloc_instance__.is_init)
 		init();
 	if (!g__malloc_instance__.tiny_zone)

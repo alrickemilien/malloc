@@ -382,6 +382,7 @@ int		main() {
 	a[0] = '*';
 	a[1] = 0;
 	show_alloc_mem();
+
 /*	test_0_basic();
 	test_1_fork();
 	test_2_fork();
