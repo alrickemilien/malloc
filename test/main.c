@@ -368,6 +368,7 @@ int		main() {
 
 	int		i = 0;
 	char *p = (char*)malloc(8);
+	char		*a;
 	while (i < 8)
 	{
 		p[i] = 'x';
@@ -376,9 +377,11 @@ int		main() {
 		i++;
 	}
 	p[8] = 0;
-	ft_putendl(p);
+
+	a = (char*)malloc(2);
+	a[0] = '*';
+	a[1] = 0;
 	show_alloc_mem();
-//	show_alloc_mem();
 /*	test_0_basic();
 	test_1_fork();
 	test_2_fork();

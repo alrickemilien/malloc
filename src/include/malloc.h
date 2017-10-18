@@ -64,13 +64,14 @@ typedef struct	s__malloc_addr__
 
 struct	s__malloc_instance__
 {
+		int						is_init;
 		t__malloc_options__		options;
 		t__malloc_block__		*tiny_zone;
 		t__malloc_block__		*small_zone;
 		t__malloc_block__		*large_zone;
-		t__malloc_addr__		tiny_zone_addr;
-		t__malloc_addr__		small_zone_addr;
-		t__malloc_addr__		large_zone_addr;
+		void					*tiny_zone_addr;
+		void					*small_zone_addr;
+		void					*large_zone_addr;
 };
 
 struct	s__malloc_thread_safe__

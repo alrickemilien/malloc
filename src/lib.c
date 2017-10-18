@@ -1,18 +1,19 @@
 #include "malloc.h"
 
-struct s__malloc_instance__			g__malloc_instance__;
+struct s__malloc_instance__			g__malloc_instance__ = {0, {0,0,0}, 0, 0, 0, 0, 0, 0};
 struct s__malloc_thread_safe__		g__malloc_thread_safe__;
+
+
 /*
  *								G_MALLOC
  */
-
 
 /*
    int		getrlimit(int resource, struct rlimit *rlp);
 
    struct	rlimit {
-   rlim_t  rlim_cur;        current (soft) limit 
-   rlim_t  rlim_max;        hard limit 
+   rlim_t  rlim_cur;        current (soft) limit
+   rlim_t  rlim_max;        hard limit
    };
 
    The getrlimit() and setrlimit() system calls will fail if:
@@ -23,11 +24,12 @@ struct s__malloc_thread_safe__		g__malloc_thread_safe__;
 
    The setrlimit() call will fail if:
 
-   [EINVAL]           The specified limit is invalid (e.g., RLIM_INFINITY or lower than rlim_cur).
+   [EINVAL] The spec limit is invalid
+   (e.g., RLIM_INFINITY or lower than rlim_cur).
 
-   [EPERM]            The limit specified would have raised the maximum limit value and the caller is not
+   [EPERM] The limit spec would have raised the maximum limit value
+   and the caller is not
    the super-user.
-
 */
 
 void	*new_zone(size_t size)
@@ -41,10 +43,10 @@ void	*new_zone(size_t size)
 			-1, 0);
 	ptr->size = size;
 	ptr->is_free = 1;
-	return ((void*)ptr);	
+	return ((void*)ptr);
 }
 
-void	init()
+void	init(void)
 {
 	int		page_size;
 
@@ -53,8 +55,11 @@ void	init()
 	g__malloc_instance__.options.absolute_max_size = SIZE_MAX - (2 * page_size);
 	g__malloc_instance__.options.tiny_zone_size = page_size;
 	g__malloc_instance__.options.small_zone_size = page_size;
-	while (g__malloc_instance__.options.tiny_zone_size < __MALLOC_TINY_ZONE_SIZE__)
+	while (g__malloc_instance__.options.tiny_zone_size
+			< __MALLOC_TINY_ZONE_SIZE__)
 		g__malloc_instance__.options.tiny_zone_size += page_size;
-	while (g__malloc_instance__.options.small_zone_size < __MALLOC_SMALL_ZONE_SIZE__)
+	while (g__malloc_instance__.options.small_zone_size
+			< __MALLOC_SMALL_ZONE_SIZE__)
 		g__malloc_instance__.options.small_zone_size += page_size;
+	g__malloc_instance__.is_init = 1;
 }

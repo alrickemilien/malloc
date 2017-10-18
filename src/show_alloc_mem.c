@@ -31,7 +31,7 @@ void	show_alloc_mem()
 
 	ptr = g__malloc_instance__.tiny_zone;
 	ft_putstr("TINY : ");
-	put_addr(g__malloc_instance__.tiny_zone_addr.addr);
+	put_addr(g__malloc_instance__.tiny_zone_addr);
 	while (ptr)
 	{
 		write(1, "\n", 1);
