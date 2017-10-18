@@ -42,7 +42,7 @@ void	show_alloc_mem()
 			ft_putstr(" - ");
 			put_addr(((void*)(ptr + 1) + (size_t)ptr->size));
 			write(1, "\n", 1);
-			print_memory(ptr + 1, sizeof(t__malloc_block__) + ptr->size);
+			print_memory(ptr, sizeof(t__malloc_block__) + ptr->size);
 		}
 		ptr = ptr->next;
 	}

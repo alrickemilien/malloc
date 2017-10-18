@@ -11,9 +11,10 @@ void	*new_block(t__malloc_block__ *block, size_t size)
 {
 	t__malloc_block__	*new_block;
 	t__malloc_block__	*tmp;
+	size_t				length;
 	
 	tmp = block;
-
+	length = 0;
 	while (tmp)
 	{
 		if (tmp->is_free && size <= tmp->size)
@@ -23,9 +24,13 @@ void	*new_block(t__malloc_block__ *block, size_t size)
 			new_block = tmp;
 			return (new_block + 1);
 		}
+		length += tmp->size + sizeof(t__malloc_block__);
 		tmp = tmp->next;
 	}
-	return (NULL);
+	new_block = block + length;
+	new_block->size = size;
+	new_block->is_free = 0;
+	return (new_block + 1);
 }
 
 void	*malloc(size_t size)
