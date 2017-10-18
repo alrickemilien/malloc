@@ -24,8 +24,6 @@ void	*new_block(t__malloc_block__ **block, size_t size)
 			new_block = tmp;
 			return (new_block + 1);
 		}
-		ft_putendl("length : ");
-		ft_putnbr(sizeof(t__malloc_block__));
 		length += tmp->size + sizeof(t__malloc_block__);
 		tmp = tmp->next;
 	}
