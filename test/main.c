@@ -89,9 +89,12 @@ int			test_3_strcat(){
 	
 	buf = malloc(sizeof(char) * 20);
 	buf[0] = 0;
-	printf("%s\n", strcat(buf, "salut"));
-	printf("%s\n", strcat(buf, " les kheys"));
+	ft_putstr( strcat(buf, "salut"));
+	show_alloc_mem();
+	ft_putstr( strcat(buf, " les kheys"));
+	show_alloc_mem();
 	free(buf);
+	show_alloc_mem();
 	return (1);
 }
 
@@ -374,10 +377,11 @@ int			test_15_realloc_null_ptr(const char *s){
 int		main() {
 
 
-	test_0_basic();
+/*	test_0_basic();
 	test_1_fork();
-/*	test_2_fork();
+	test_2_fork();
 	test_3_strcat();
+	
 	test_4_strdup("coucou");
 	//test_5_realloc("des ", "dinosaures");
 	test_6_null();

@@ -56,5 +56,14 @@ void	*malloc(size_t size)
 		UNLOCK( &g__malloc_thread_safe__.tiny );
 		return (ret);
 	}
+	if (size < __MALLOC_SMALL_LIMIT__)
+	{
+		if (!g__malloc_instance__.small_zone)
+			init_small_zone();
+		LOCK( &g__malloc_thread_safe__.small );
+		ret = new_block(&g__malloc_instance__.small_zone, size);
+		UNLOCK( &g__malloc_thread_safe__.small );
+		return (ret);
+	}
 	return (NULL);
 }

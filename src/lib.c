@@ -93,3 +93,16 @@ void		init_tiny_zone(void)
 	UNLOCK( &g__malloc_thread_safe__.tiny );
 
 }
+
+void		init_small_zone(void)
+{
+	LOCK( &g__malloc_thread_safe__.small );
+
+	g__malloc_instance__.small_zone = new_zone(g__malloc_instance__.options.small_zone_size);
+	ft_bzero(g__malloc_instance__.tiny_zone, sizeof(t__malloc_block__));
+	g__malloc_instance__.small_zone->is_free = 1;
+	g__malloc_instance__.small_zone->size = g__malloc_instance__.options.small_zone_size;
+	g__malloc_instance__.small_zone_addr = g__malloc_instance__.small_zone;
+
+	UNLOCK( &g__malloc_thread_safe__.small );
+}
