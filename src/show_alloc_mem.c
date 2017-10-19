@@ -75,3 +75,11 @@ void	show_alloc_mem()
 	ft_putnbr(total);
 	ft_putendl(" octets");
 }
+
+/*
+ *		SHOW_ALLOC_MEM_EX()
+ *		-	PID
+ *		-	TID
+ *		-	LostFragments
+ *		-	print_memory()
+ */

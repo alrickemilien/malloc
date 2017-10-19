@@ -12,7 +12,8 @@
 
 # define G_MALLOC						g__malloc_instance__
 /*
-		CHQUE ZONE DOIT CONTENIR AU MOINS 100 ALLOCATIONS
+	-		CHQUE ZONE DOIT CONTENIR AU MOINS 100 ALLOCATIONS
+	-		En cas d’erreur, les fonctions malloc() et realloc() retournent un pointeur NULL
 */
 # define __MALLOC_TINY_LIMIT__		993
 # define __MALLOC_SMALL_LIMIT__		127000

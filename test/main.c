@@ -12,7 +12,6 @@
 # include "../libft/libft.h"
 # include "../src/include/malloc.h"
 
-
 int			test_0_basic(){
 	char	*str;
 	int		i;
@@ -162,7 +161,7 @@ int			test_8_many_mallocs(){
 	buf[7] = malloc(sizeof(char) * 4);
 	buf[2] = malloc(sizeof(char) * 42);
 	buf[0] = malloc(sizeof(char) * 99);
-//	free(buf[7]);
+	free(buf[7]);
 	show_alloc_mem();
 	buf[3] = malloc(sizeof(char) * 2);
 	buf[7] = malloc(sizeof(char) * 41);
@@ -470,26 +469,45 @@ int			test_21_realloc_large_to_tiny(){
 	return (1);
 }
 
+int			test_22_not_valid_ptr_realloc(){
+	char	*buf;
+	int		i;
+
+	buf = (char*)0x101AD8E86;
+	if (!realloc(buf, 15))
+		ft_putendl("INVALID POINTER PASSED TO MALLOC");
+	else
+		ft_putendl("VALID POINTER PASSED TO MALLOC");
+
+	buf = (char*)malloc(12);
+	show_alloc_mem();
+	if (!realloc(buf, 15))
+		ft_putendl("INVALID POINTER PASSED TO MALLOC");
+	else
+		ft_putendl("VALID POINTER PASSED TO MALLOC");
+	return (1);
+}
+
 int		main() {
 
 
-	test_0_basic();
-/*	test_1_fork();
+/*	test_0_basic();
+	test_1_fork();
 	test_2_fork();
 	test_3_strcat();
 	
 	test_4_strdup("coucou");
 	//test_5_realloc("des ", "dinosaures");
 	test_6_null();
-	//test_7_huge_size();*/
+	//test_7_huge_size();
 	test_8_many_mallocs();
-/*	test_9_tiny();
+	test_9_tiny();
 	test_10_malloc_realloc("salut10erferfrferfrfef");
 	test_11_malloc_realloc("salut11");
 	test_12_malloc_realloc("salut12");
 	test_13_realloc_inf("lalala");
 	test_14_realloc_null_size("le test 14");
-	test_15_realloc_null_ptr("le test 15");
-*/
+	test_15_realloc_null_ptr("le test 15");*/
+	test_22_not_valid_ptr_realloc();
 	return (1);
 }

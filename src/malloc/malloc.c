@@ -7,6 +7,7 @@
 
 #include "malloc.h"
 
+// Dans la boucle il faut detecter les LostSegment made by realloc (BONUS)
 void	*new_block(t__malloc_block__ **block, size_t size)
 {
 	t__malloc_block__	*new_block;
