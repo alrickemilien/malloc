@@ -24,17 +24,9 @@ static void put_addr(void *param)
 	}
 }
 
-void	show_alloc_mem()
+static void		print_zone(t__malloc_block__ *ptr, void *addr, int *total)
 {
-	extern struct s__malloc_instance__	g__malloc_instance__;
-	t__malloc_block__					*ptr;
-	int									total;
-
-	ft_putstr("------------- SHOW_ALLOC_MEM() -------------\n\n");
-	ptr = g__malloc_instance__.tiny_zone;
-	ft_putstr("TINY : ");
-	put_addr(g__malloc_instance__.tiny_zone_addr);
-	total = 0;
+	put_addr(addr);
 	while (ptr)
 	{
 		write(1, "\n", 1);
@@ -48,9 +40,36 @@ void	show_alloc_mem()
 			ft_putnbr(ptr->size);
 			ft_putstr(" octets\n");
 			print_memory(ptr, sizeof(t__malloc_block__) + ptr->size);
-			total += sizeof(t__malloc_block__) + ptr->size;
+			*total += sizeof(t__malloc_block__) + ptr->size;
 		}
 		ptr = ptr->next;
+	}
+}
+
+void	show_alloc_mem()
+{
+	extern struct s__malloc_instance__	g__malloc_instance__;
+	int									total;
+
+	ft_putstr("------------- SHOW_ALLOC_MEM() -------------\n\n");
+	total = 0;
+	ft_putstr("TINY : ");
+	print_zone(g__malloc_instance__.tiny_zone,
+				g__malloc_instance__.tiny_zone_addr,
+				&total);
+	if (g__malloc_instance__.small_zone)
+	{
+		ft_putstr("SMALL : ");
+		print_zone(g__malloc_instance__.small_zone,
+					g__malloc_instance__.small_zone_addr,
+					&total);
+	}
+	if (g__malloc_instance__.large_zone)
+	{
+		ft_putstr("LARGE : ");
+		print_zone(g__malloc_instance__.large_zone,
+					g__malloc_instance__.large_zone_addr,
+					&total);
 	}
 	ft_putstr("Total : ");
 	ft_putnbr(total);

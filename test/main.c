@@ -163,7 +163,7 @@ int			test_8_many_mallocs(){
 	buf[2] = malloc(sizeof(char) * 42);
 	buf[0] = malloc(sizeof(char) * 99);
 	free(buf[7]);
-	//show_alloc_mem();
+	show_alloc_mem();
 	buf[3] = malloc(sizeof(char) * 2);
 	buf[7] = malloc(sizeof(char) * 41);
 	buf[1] = malloc(sizeof(char));
@@ -171,7 +171,7 @@ int			test_8_many_mallocs(){
 	buf[2] = malloc(sizeof(char) * 41);
 	buf[8] = malloc(sizeof(char) * 200);
 	free(buf[3]);
-	//show_alloc_mem();
+	show_alloc_mem();
 	buf[9] = malloc(sizeof(char) * 5);
 	free(buf[0]);
 	free(buf[7]);
@@ -186,7 +186,7 @@ int			test_8_many_mallocs(){
 	buf[3] = malloc(sizeof(char) * 600);
 	free(buf[8]);
 	free(buf[3]);
-	//show_alloc_mem();
+	show_alloc_mem();
 	return (1);
 }
 
@@ -374,11 +374,107 @@ int			test_15_realloc_null_ptr(const char *s){
 	return (1);
 }
 
+int			test_16_realloc_tiny_to_small(){
+	char	*buf;
+	int		i;
+
+	buf = (char*)malloc(sizeof(char) * 15);
+	for (i=0;i < 15;i++){
+		buf[i] = 42;
+	}
+	//show_alloc_mem();
+	buf = realloc(buf, sizeof(char) * (__MALLOC_TINY_LIMIT__ + 1));
+	//show_alloc_mem();
+	free(buf);
+	//show_alloc_mem();
+	return (1);
+}
+
+int			test_17_realloc_small_to_tiny(){
+	char	*buf;
+	int		i;
+
+	buf = malloc(sizeof(char) * (__MALLOC_TINY_LIMIT__ + 1));
+	for (i=0;i < 15;i++){
+		buf[i] = 42;
+	}
+	//show_alloc_mem();
+	buf = (char*)realloc(buf, sizeof(char) * 15);
+	//show_alloc_mem();
+	free(buf);
+	//show_alloc_mem();
+	return (1);
+}
+
+int			test_18_realloc_small_to_large(){
+	char	*buf;
+	int		i;
+
+	buf = (char*)malloc(sizeof(char) * (__MALLOC_SMALL_LIMIT__ + 1));
+	for (i=0;i < 15;i++){
+		buf[i] = 42;
+	}
+	//show_alloc_mem();
+	buf = realloc(buf, sizeof(char) * (__MALLOC_LARGE_LIMIT__ + 1));
+	//show_alloc_mem();
+	free(buf);
+	//show_alloc_mem();
+	return (1);
+}
+
+int			test_19_realloc_large_to_small(){
+	char	*buf;
+	int		i;
+
+	buf = malloc(sizeof(char) * (__MALLOC_LARGE_LIMIT__ + 1));
+	for (i=0;i < 15;i++){
+		buf[i] = 42;
+	}
+	//show_alloc_mem();
+	buf = (char*)realloc(buf, sizeof(char) * (__MALLOC_SMALL_LIMIT__ + 1));
+	//show_alloc_mem();
+	free(buf);
+	//show_alloc_mem();
+	return (1);
+}
+
+int			test_20_realloc_tiny_to_large(){
+	char	*buf;
+	int		i;
+
+	buf = (char*)malloc(sizeof(char) * 15);
+	for (i=0;i < 15;i++){
+		buf[i] = 42;
+	}
+	//show_alloc_mem();
+	buf = realloc(buf, sizeof(char) * (__MALLOC_LARGE_LIMIT__ + 1));
+	//show_alloc_mem();
+	free(buf);
+	//show_alloc_mem();
+	return (1);
+}
+
+int			test_21_realloc_large_to_tiny(){
+	char	*buf;
+	int		i;
+
+	buf = malloc(sizeof(char) * (__MALLOC_LARGE_LIMIT__ + 1));
+	for (i=0;i < 15;i++){
+		buf[i] = 42;
+	}
+	//show_alloc_mem();
+	buf = (char*)realloc(buf, sizeof(char) * 15);
+	//show_alloc_mem();
+	free(buf);
+	//show_alloc_mem();
+	return (1);
+}
+
 int		main() {
 
 
-/*	test_0_basic();
-	test_1_fork();
+	test_0_basic();
+/*	test_1_fork();
 	test_2_fork();
 	test_3_strcat();
 	

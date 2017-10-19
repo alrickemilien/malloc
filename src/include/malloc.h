@@ -7,6 +7,9 @@
 # include <stdio.h>
 # include <pthread.h>
 # include <stdint.h>
+// FOR DEBUG
+#include <errno.h>
+
 # define G_MALLOC						g__malloc_instance__
 /*
 		CHQUE ZONE DOIT CONTENIR AU MOINS 100 ALLOCATIONS
