@@ -1,7 +1,11 @@
 #include "malloc.h"
 
 struct s__malloc_instance__			g__malloc_instance__ = {0, {0,0,0}, 0, 0, 0, 0, 0, 0};
-struct s__malloc_thread_safe__		g__malloc_thread_safe__;
+struct s__malloc_thread_safe__		g__malloc_thread_safe__ = {
+	PTHREAD_MUTEX_INITIALIZER,
+	PTHREAD_MUTEX_INITIALIZER,
+	PTHREAD_MUTEX_INITIALIZER,
+	PTHREAD_MUTEX_INITIALIZER};
 
 
 /*
@@ -59,6 +63,8 @@ void	init(void)
 {
 	int		page_size;
 
+	LOCK( &g__malloc_thread_safe__.global );
+
 	page_size = getpagesize();
 	ft_bzero(&g__malloc_instance__, sizeof(g__malloc_instance__));
 	g__malloc_instance__.options.absolute_max_size = SIZE_MAX - (2 * page_size);
@@ -71,4 +77,6 @@ void	init(void)
 			< __MALLOC_SMALL_ZONE_SIZE__)
 		g__malloc_instance__.options.small_zone_size += page_size;
 	g__malloc_instance__.is_init = 1;
+
+	UNLOCK( &g__malloc_thread_safe__.global );
 }

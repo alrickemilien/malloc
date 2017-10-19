@@ -43,6 +43,8 @@
  *		|	BLOCK		|											|
  *		|				|											|
  */
+# define LOCK(mutex) pthread_mutex_lock( mutex )
+# define UNLOCK(mutex) pthread_mutex_unlock( mutex )
 
 typedef struct	s__malloc_block__
 {
@@ -72,7 +74,10 @@ struct	s__malloc_instance__
 
 struct	s__malloc_thread_safe__
 {
-	pthread_t	self;
+	pthread_mutex_t 		global;
+	pthread_mutex_t 		tiny;
+	pthread_mutex_t 		small;
+	pthread_mutex_t 		large;
 };
 
 void	init(void);

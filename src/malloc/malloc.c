@@ -12,7 +12,9 @@ void	*new_block(t__malloc_block__ **block, size_t size)
 	t__malloc_block__	*new_block;
 	t__malloc_block__	*tmp;
 	size_t				length;
-	
+	int					tid;
+
+	tid = (int)pthread_self();
 	tmp = *block;
 	length = 0;
 	while (tmp)
