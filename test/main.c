@@ -488,6 +488,42 @@ int			test_22_not_valid_ptr_realloc(){
 	return (1);
 }
 
+int			test_23_not_valid_ptr_realloc_tiny(){
+	char	*buf;
+	int		i;
+
+	buf = (char*)malloc(__MALLOC_TINY_ZONE_SIZE__);
+	show_alloc_mem();
+	if (!realloc(buf, 15))
+		ft_putendl("INVALID POINTER PASSED TO MALLOC");
+	else
+		ft_putendl("VALID POINTER PASSED TO MALLOC");
+	return (1);
+}
+
+int			test_24_not_valid_ptr_realloc_small(){
+	char	*buf;
+	int		i;
+
+	buf = (char*)malloc(__MALLOC_SMALL_ZONE_SIZE__);
+	show_alloc_mem();
+	if (!realloc(buf, __MALLOC_TINY_ZONE_SIZE__ + 2))
+		ft_putendl("INVALID POINTER PASSED TO MALLOC");
+	else
+		ft_putendl("VALID POINTER PASSED TO MALLOC");
+	return (1);
+}
+
+int			test_25_bigger_realloc_same_zone(){
+	char	*buf;
+	int		i;
+
+	buf = ft_strdup("wesh");
+	buf = (char*)realloc(buf, 20);
+	show_alloc_mem();
+	return (1);
+}
+
 int		main() {
 
 
@@ -507,7 +543,9 @@ int		main() {
 	test_12_malloc_realloc("salut12");
 	test_13_realloc_inf("lalala");
 	test_14_realloc_null_size("le test 14");
-	test_15_realloc_null_ptr("le test 15");*/
-	test_22_not_valid_ptr_realloc();
+	test_15_realloc_null_ptr("le test 15");
+	test_22_not_valid_ptr_realloc();*/
+	test_25_bigger_realloc_same_zone();
+	
 	return (1);
 }

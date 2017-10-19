@@ -27,6 +27,10 @@
  */
 # define __MALLOC_TINY_ZONE_SIZE__	2000000
 # define __MALLOC_SMALL_ZONE_SIZE__	16000000
+
+# define __MALLOC_TINY__			1
+# define __MALLOC_SMALL__			2
+# define __MALLOC_LARGE__			3
 /*
  *
  *		|				|											|
