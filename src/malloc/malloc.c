@@ -37,6 +37,7 @@ void	*new_block(t__malloc_block__ **block, size_t size)
 	return (new_block + 1);
 }
 
+
 void	*malloc(size_t size)
 {
 	extern char								**environ;
@@ -44,17 +45,10 @@ void	*malloc(size_t size)
 	extern struct s__malloc_thread_safe__	g__malloc_thread_safe__;
 	void									*ret;
 
-	ft_putnbr((unsigned long)pthread_self());
 	if (!g__malloc_instance__.is_init)
 		init();
 	if (!g__malloc_instance__.tiny_zone)
-	{
-		g__malloc_instance__.tiny_zone = new_zone(g__malloc_instance__.options.tiny_zone_size);
-		ft_bzero(g__malloc_instance__.tiny_zone, sizeof(t__malloc_block__));
-		g__malloc_instance__.tiny_zone->is_free = 1;
-		g__malloc_instance__.tiny_zone->size = g__malloc_instance__.options.tiny_zone_size;
-		g__malloc_instance__.tiny_zone_addr = g__malloc_instance__.tiny_zone;
-	}
+		init_tiny_zone();
 	if (size < __MALLOC_TINY_LIMIT__)
 	{
 		LOCK( &g__malloc_thread_safe__.tiny );

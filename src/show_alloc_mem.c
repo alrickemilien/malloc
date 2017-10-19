@@ -28,10 +28,13 @@ void	show_alloc_mem()
 {
 	extern struct s__malloc_instance__	g__malloc_instance__;
 	t__malloc_block__					*ptr;
+	int									total;
 
+	ft_putstr("------------- SHOW_ALLOC_MEM() -------------\n\n");
 	ptr = g__malloc_instance__.tiny_zone;
 	ft_putstr("TINY : ");
 	put_addr(g__malloc_instance__.tiny_zone_addr);
+	total = 0;
 	while (ptr)
 	{
 		write(1, "\n", 1);
@@ -43,7 +46,11 @@ void	show_alloc_mem()
 			put_addr(((void*)(ptr + 1) + (size_t)ptr->size));
 			write(1, "\n", 1);
 			print_memory(ptr, sizeof(t__malloc_block__) + ptr->size);
+			total += sizeof(t__malloc_block__) + ptr->size;
 		}
 		ptr = ptr->next;
 	}
+	ft_putstr("Total : ");
+	ft_putnbr(total);
+	ft_putendl(" octets");
 }

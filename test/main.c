@@ -22,8 +22,9 @@ int			test_0_basic(){
 		str[i] = '*';
 	}
 	str[50] = 0;
-	printf("%s\n", str);
+	show_alloc_mem();
 	free(str);
+	show_alloc_mem();
 	return (1);
 }
 
@@ -43,12 +44,18 @@ int			test_1_fork(){
 		ptr[i] = c;
 	}
 	ptr[10] = 0;
-	printf("%s\n", ptr);
-	free(ptr);
 	if (pid != 0)
 		wait(0);
 	if (pid == 0)
+	{
+		show_alloc_mem();
+		free(ptr);
+		show_alloc_mem();
 		exit(0);
+	}
+	show_alloc_mem();
+	free(ptr);
+	show_alloc_mem();
 	return (1);
 }
 
@@ -366,26 +373,10 @@ int			test_15_realloc_null_ptr(const char *s){
 
 int		main() {
 
-	int		i = 0;
-	char *p = (char*)malloc(8);
-	char		*a;
-	while (i < 8)
-	{
-		p[i] = 'x';
-		if (i == 5)
-			p[i] = '2';
-		i++;
-	}
-	p[8] = 0;
 
-	a = (char*)malloc(2);
-	a[0] = '*';
-	a[1] = 0;
-	show_alloc_mem();
-
-/*	test_0_basic();
+	test_0_basic();
 	test_1_fork();
-	test_2_fork();
+/*	test_2_fork();
 	test_3_strcat();
 	test_4_strdup("coucou");
 	//test_5_realloc("des ", "dinosaures");

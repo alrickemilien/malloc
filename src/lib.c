@@ -43,7 +43,7 @@ struct s__malloc_thread_safe__		g__malloc_thread_safe__ = {
    [EPERM] The limit spec would have raised the maximum limit value
    and the caller is not
    the super-user.
-*/
+   */
 
 void	*new_zone(size_t size)
 {
@@ -59,14 +59,13 @@ void	*new_zone(size_t size)
 	return ((void*)ptr);
 }
 
-void	init(void)
+void				init(void)
 {
 	int		page_size;
 
 	LOCK( &g__malloc_thread_safe__.global );
 
 	page_size = getpagesize();
-	ft_bzero(&g__malloc_instance__, sizeof(g__malloc_instance__));
 	g__malloc_instance__.options.absolute_max_size = SIZE_MAX - (2 * page_size);
 	g__malloc_instance__.options.tiny_zone_size = page_size;
 	g__malloc_instance__.options.small_zone_size = page_size;
@@ -79,4 +78,18 @@ void	init(void)
 	g__malloc_instance__.is_init = 1;
 
 	UNLOCK( &g__malloc_thread_safe__.global );
+}
+
+void		init_tiny_zone(void)
+{
+	LOCK( &g__malloc_thread_safe__.tiny );
+
+	g__malloc_instance__.tiny_zone = new_zone(g__malloc_instance__.options.tiny_zone_size);
+	ft_bzero(g__malloc_instance__.tiny_zone, sizeof(t__malloc_block__));
+	g__malloc_instance__.tiny_zone->is_free = 1;
+	g__malloc_instance__.tiny_zone->size = g__malloc_instance__.options.tiny_zone_size;
+	g__malloc_instance__.tiny_zone_addr = g__malloc_instance__.tiny_zone;
+
+	UNLOCK( &g__malloc_thread_safe__.tiny );
+
 }
