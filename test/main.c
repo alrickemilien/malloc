@@ -162,7 +162,7 @@ int			test_8_many_mallocs(){
 	buf[7] = malloc(sizeof(char) * 4);
 	buf[2] = malloc(sizeof(char) * 42);
 	buf[0] = malloc(sizeof(char) * 99);
-	free(buf[7]);
+//	free(buf[7]);
 	show_alloc_mem();
 	buf[3] = malloc(sizeof(char) * 2);
 	buf[7] = malloc(sizeof(char) * 41);
@@ -481,9 +481,9 @@ int		main() {
 	test_4_strdup("coucou");
 	//test_5_realloc("des ", "dinosaures");
 	test_6_null();
-	//test_7_huge_size();
+	//test_7_huge_size();*/
 	test_8_many_mallocs();
-	test_9_tiny();
+/*	test_9_tiny();
 	test_10_malloc_realloc("salut10erferfrferfrfef");
 	test_11_malloc_realloc("salut11");
 	test_12_malloc_realloc("salut12");
