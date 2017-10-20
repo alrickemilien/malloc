@@ -86,7 +86,6 @@ void				init(void)
 
 int		init_zone(int macro)
 {
-	ft_putendl(" --- Je suis ici --- ");	
 	LOCK( &g__malloc_thread_safe__.zone[macro] );
 
 	if (!(g__malloc_instance__.zone[macro] = new_zone(g__malloc_instance__.options.zone_size[macro])))

@@ -525,6 +525,15 @@ int			test_25_bigger_realloc_same_zone(){
 	return (1);
 }
 
+int			test_26_free_after_ptr(){
+	char	*buf;
+
+	buf = (char*)malloc(20);
+	show_alloc_mem();
+	free(buf + 1);
+	return (1);
+}
+
 int		main() {
 
 

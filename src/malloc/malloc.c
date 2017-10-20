@@ -45,7 +45,7 @@ static void
 			PROT_READ | PROT_WRITE,
 			MAP_ANON | MAP_PRIVATE, -1, 0);
 	else
-		new_block = ((void*)(*block + 1)) + (*block)->size;
+		new_block = (void*)(*block + 1) + (*block)->size;
 	new_block->size = size;
 	new_block->is_free = 0;
 	new_block->next = *block;
@@ -72,5 +72,9 @@ void	*malloc(size_t size)
 	LOCK( &g__malloc_thread_safe__.zone[macro] );
 	ret = new_block(&g__malloc_instance__.zone[macro], size);
 	UNLOCK( &g__malloc_thread_safe__.zone[macro] );
+	ft_putnbr(size);
+	write(1, "\n", 1);
+	((char*)ret)[0] = '*';
+	show_alloc_mem();
 	return (ret);
 }
