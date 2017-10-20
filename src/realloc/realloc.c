@@ -1,7 +1,5 @@
 #include "malloc.h"
 
-// For realloc(), the input pointer is still valid if reallocation failed.
-
 static int	is_ptr_valid(
 		t__malloc_block__ *ptr,
 		struct s__malloc_instance__ *instance)
@@ -10,12 +8,14 @@ static int	is_ptr_valid(
 	t__malloc_block__	*tmp;
 
 	block = ptr - 1;
-	if ( ((size_t)block >= (size_t)instance->tiny_zone_addr
-				&& (size_t)block < ((size_t)instance->tiny_zone_addr +__MALLOC_TINY_ZONE_SIZE__))
-		|| (((size_t)block >= (size_t)instance->small_zone_addr
-				&& (size_t)block < ((size_t)instance->small_zone_addr +__MALLOC_SMALL_ZONE_SIZE__))) )
+	if ( ((size_t)block >= (size_t)instance->zone_addr[__MALLOC_TINY__]
+				&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_TINY__]
+									+ __MALLOC_TINY_ZONE_SIZE__))
+		|| (((size_t)block >= (size_t)instance->zone_addr[__MALLOC_SMALL__]
+				&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_SMALL__]
+									+ __MALLOC_SMALL_ZONE_SIZE__))) )
 		return (1);
-	tmp = instance->large_zone;
+	tmp = instance->zone[__MALLOC_LARGE__];
 	while (tmp)
 	{
 		if (tmp == block)
@@ -25,7 +25,7 @@ static int	is_ptr_valid(
 	return (0);
 }
 
-static int get_zone(size_t size)
+static inline int get_zone(size_t size)
 {
 	if (size < __MALLOC_TINY_LIMIT__)
 		return (__MALLOC_TINY__);
@@ -44,21 +44,15 @@ can_extend(
 	void				*after;
 	t__malloc_block__	*tmp;
 
-	if (current_zone ==  __MALLOC_LARGE__)
+	if (current_zone == __MALLOC_LARGE__)
 		return (0);
 	after = (void*) ((size_t)ptr + ptr->size + sizeof(t__malloc_block__));
-	if (current_zone == __MALLOC_TINY__ 
-		&& (size_t)after > (size_t) instance->tiny_zone + __MALLOC_TINY_ZONE_SIZE__)
-		return (0);
-	if (current_zone == __MALLOC_SMALL__ 
-		&& (size_t)after > (size_t) instance->small_zone + __MALLOC_SMALL_ZONE_SIZE__)
+	if ((size_t)after > (size_t) instance->zone[current_zone]
+						+ instance->options.zone_size[current_zone])
 		return (0);
 	if (is_ptr_valid(ptr, instance))
 		return (0);
-	if (current_zone == __MALLOC_TINY__)
-		tmp = instance->tiny_zone;
-	else
-		tmp = instance->small_zone;
+	tmp = instance->zone[current_zone];
 	if (tmp == ptr)
 		return (1);
 	while (tmp && tmp->next != ptr)

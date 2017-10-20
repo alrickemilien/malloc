@@ -50,26 +50,22 @@ void	show_alloc_mem()
 {
 	extern struct s__malloc_instance__	g__malloc_instance__;
 	int									total;
+	int									i;
+	char								*strings[3] = {"TINY : ", "SMALL : ", "LARGE : "};
 
 	ft_putstr("------------- SHOW_ALLOC_MEM() -------------\n\n");
 	total = 0;
-	ft_putstr("TINY : ");
-	print_zone(g__malloc_instance__.tiny_zone,
-				g__malloc_instance__.tiny_zone_addr,
+	i = 0;
+	while (i <= __MALLOC_LARGE__)
+	{
+		if (g__malloc_instance__.zone[i])
+		{
+			ft_putstr(strings[i]);
+			print_zone(g__malloc_instance__.zone[i],
+				g__malloc_instance__.zone_addr[i],
 				&total);
-	if (g__malloc_instance__.small_zone)
-	{
-		ft_putstr("SMALL : ");
-		print_zone(g__malloc_instance__.small_zone,
-					g__malloc_instance__.small_zone_addr,
-					&total);
-	}
-	if (g__malloc_instance__.large_zone)
-	{
-		ft_putstr("LARGE : ");
-		print_zone(g__malloc_instance__.large_zone,
-					g__malloc_instance__.large_zone_addr,
-					&total);
+		}
+		i++;
 	}
 	ft_putstr("Total : ");
 	ft_putnbr(total);
@@ -77,9 +73,9 @@ void	show_alloc_mem()
 }
 
 /*
- *		SHOW_ALLOC_MEM_EX()
- *		-	PID
- *		-	TID
- *		-	LostFragments
- *		-	print_memory()
+ * *	SHOW_ALLOC_MEM_EX()
+ * *		-	PID
+ * *		-	TID
+ * *		-	LostFragments
+ * *		-	print_memory()
  */

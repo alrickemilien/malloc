@@ -28,11 +28,10 @@
 # define __MALLOC_TINY_ZONE_SIZE__	2000000
 # define __MALLOC_SMALL_ZONE_SIZE__	16000000
 
-# define __MALLOC_TINY__			1
-# define __MALLOC_SMALL__			2
-# define __MALLOC_LARGE__			3
+# define __MALLOC_TINY__			0
+# define __MALLOC_SMALL__			1
+# define __MALLOC_LARGE__			2
 /*
- *
  *		|				|											|
  *		|	T_MALLOC	|					DATA					|
  *		|	BLOCK		|											|
@@ -50,8 +49,7 @@ typedef struct	s__malloc_block__
 
 typedef struct	s__malloc_options__
 {
-	int				tiny_zone_size;
-	int				small_zone_size;
+	int				zone_size[2];
 	int				absolute_max_size;
 }				t__malloc_options__;
 
@@ -59,25 +57,18 @@ struct	s__malloc_instance__
 {
 		int						is_init;
 		t__malloc_options__		options;
-		t__malloc_block__		*tiny_zone;
-		t__malloc_block__		*small_zone;
-		t__malloc_block__		*large_zone;
-		void					*tiny_zone_addr;
-		void					*small_zone_addr;
-		void					*large_zone_addr;
+		t__malloc_block__		*zone[3];
+		void					*zone_addr[3];
 };
 
 struct	s__malloc_thread_safe__
 {
 	pthread_mutex_t 		global;
-	pthread_mutex_t 		tiny;
-	pthread_mutex_t 		small;
-	pthread_mutex_t 		large;
+	pthread_mutex_t 		zone[3];
 };
 
 void						init(void);
-void						init_tiny_zone(void);
-void						init_small_zone(void);
+int							init_zone(int zone);
 void						print_memory(void *ptr, size_t size);
 void						*new_zone(size_t size);
 void						show_alloc_mem(void);

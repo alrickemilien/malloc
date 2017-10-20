@@ -1,15 +1,18 @@
 #include "malloc.h"
 
-struct s__malloc_instance__			g__malloc_instance__ = {0, {0,0,0}, 0, 0, 0, 0, 0, 0};
+struct s__malloc_instance__			g__malloc_instance__ = {0, { { 0, 0 }, 0 }, { 0, 0, 0 }, { 0, 0, 0 }};
 struct s__malloc_thread_safe__		g__malloc_thread_safe__ = {
 	PTHREAD_MUTEX_INITIALIZER,
-	PTHREAD_MUTEX_INITIALIZER,
-	PTHREAD_MUTEX_INITIALIZER,
-	PTHREAD_MUTEX_INITIALIZER};
+	{
+		PTHREAD_MUTEX_INITIALIZER,
+		PTHREAD_MUTEX_INITIALIZER,
+		PTHREAD_MUTEX_INITIALIZER
+	}
+};
 
 
 /*
- *								G_MALLOC
+ *						G_MALLOC
  */
 
 /*							THRED SAFE FUNCTIONS
@@ -49,11 +52,12 @@ void	*new_zone(size_t size)
 {
 	t__malloc_block__	*ptr;
 
-	ptr = mmap(0,
+	if ((ptr = mmap(0,
 			size + sizeof(t__malloc_block__),
 			PROT_READ | PROT_WRITE,
 			MAP_ANON | MAP_PRIVATE,
-			-1, 0);
+			-1, 0)) == MAP_FAILED)
+		return (NULL);
 	ptr->size = size;
 	ptr->is_free = 1;
 	return ((void*)ptr);
@@ -67,42 +71,30 @@ void				init(void)
 
 	page_size = getpagesize();
 	g__malloc_instance__.options.absolute_max_size = SIZE_MAX - (2 * page_size);
-	g__malloc_instance__.options.tiny_zone_size = page_size;
-	g__malloc_instance__.options.small_zone_size = page_size;
-	while (g__malloc_instance__.options.tiny_zone_size
+	g__malloc_instance__.options.zone_size[__MALLOC_TINY__] = page_size;
+	g__malloc_instance__.options.zone_size[__MALLOC_SMALL__] = page_size;
+	while (g__malloc_instance__.options.zone_size[__MALLOC_TINY__]
 			< __MALLOC_TINY_ZONE_SIZE__)
-		g__malloc_instance__.options.tiny_zone_size += page_size;
-	while (g__malloc_instance__.options.small_zone_size
+		g__malloc_instance__.options.zone_size[__MALLOC_TINY__] += page_size;
+	while (g__malloc_instance__.options.zone_size[__MALLOC_SMALL__]
 			< __MALLOC_SMALL_ZONE_SIZE__)
-		g__malloc_instance__.options.small_zone_size += page_size;
+		g__malloc_instance__.options.zone_size[__MALLOC_SMALL__] += page_size;
 	g__malloc_instance__.is_init = 1;
 
 	UNLOCK( &g__malloc_thread_safe__.global );
 }
 
-void		init_tiny_zone(void)
+int		init_zone(int macro)
 {
-	LOCK( &g__malloc_thread_safe__.tiny );
+	ft_putendl(" --- Je suis ici --- ");	
+	LOCK( &g__malloc_thread_safe__.zone[macro] );
 
-	g__malloc_instance__.tiny_zone = new_zone(g__malloc_instance__.options.tiny_zone_size);
-	ft_bzero(g__malloc_instance__.tiny_zone, sizeof(t__malloc_block__));
-	g__malloc_instance__.tiny_zone->is_free = 1;
-	g__malloc_instance__.tiny_zone->size = g__malloc_instance__.options.tiny_zone_size;
-	g__malloc_instance__.tiny_zone_addr = g__malloc_instance__.tiny_zone;
+	if (!(g__malloc_instance__.zone[macro] = new_zone(g__malloc_instance__.options.zone_size[macro])))
+		return (0);
+	g__malloc_instance__.zone[macro]->is_free = 1;
+	g__malloc_instance__.zone[macro]->size = g__malloc_instance__.options.zone_size[macro];
+	g__malloc_instance__.zone_addr[macro] = g__malloc_instance__.zone[macro];
 
-	UNLOCK( &g__malloc_thread_safe__.tiny );
-
-}
-
-void		init_small_zone(void)
-{
-	LOCK( &g__malloc_thread_safe__.small );
-
-	g__malloc_instance__.small_zone = new_zone(g__malloc_instance__.options.small_zone_size);
-	ft_bzero(g__malloc_instance__.tiny_zone, sizeof(t__malloc_block__));
-	g__malloc_instance__.small_zone->is_free = 1;
-	g__malloc_instance__.small_zone->size = g__malloc_instance__.options.small_zone_size;
-	g__malloc_instance__.small_zone_addr = g__malloc_instance__.small_zone;
-
-	UNLOCK( &g__malloc_thread_safe__.small );
+	UNLOCK( &g__malloc_thread_safe__.zone[macro] );
+	return (1);
 }
