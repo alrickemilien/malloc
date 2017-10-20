@@ -34,24 +34,62 @@ static int get_zone(size_t size)
 	return (__MALLOC_LARGE__);
 }
 
-/*static void *get_zone_ptr(
-		int							zone,
-		struct s__malloc_instance__ *instance)
+static int
+can_extend(
+		struct s__malloc_instance__	*instance,
+		t__malloc_block__			*ptr,
+		size_t						size,
+		int							current_zone)
 {
-	if ( zone == __MALLOC_TINY__ )
-		return (instance->tiny_zone);
-	if ( zone == __MALLOC_SMALL__ )
-		return (instance->small_zone);
-	return (instance->large_zone);
-}*/
+	void				*after;
+	t__malloc_block__	*tmp;
+
+	if (current_zone ==  __MALLOC_LARGE__)
+		return (0);
+	after = (void*) ((size_t)ptr + ptr->size + sizeof(t__malloc_block__));
+	if (current_zone == __MALLOC_TINY__ 
+		&& (size_t)after > (size_t) instance->tiny_zone + __MALLOC_TINY_ZONE_SIZE__)
+		return (0);
+	if (current_zone == __MALLOC_SMALL__ 
+		&& (size_t)after > (size_t) instance->small_zone + __MALLOC_SMALL_ZONE_SIZE__)
+		return (0);
+	if (is_ptr_valid(ptr, instance))
+		return (0);
+	if (current_zone == __MALLOC_TINY__)
+		tmp = instance->tiny_zone;
+	else
+		tmp = instance->small_zone;
+	if (tmp == ptr)
+		return (1);
+	while (tmp && tmp->next != ptr)
+		tmp = tmp->next;
+	if ( ((size_t)after - (size_t)tmp) < size - ptr->size)
+		return (1);
+	return (0);
+}
+
+void		*process_realloc(void *ptr, size_t size)
+{
+	void	*ret;
+	size_t	i;
+
+	if(!(ret = malloc(size)))
+		return (NULL);
+	i = 0;
+	while (i < ((t__malloc_block__*)ptr - 1)->size)
+	{
+		((char*)ret)[i] = ((char*)ptr)[i];
+		i++;
+	}
+	free(ptr); /* free l'ancien maillon */
+	return (ret);
+}
 
 void	*realloc(void *ptr, size_t size)
 {
 	extern struct s__malloc_instance__		g__malloc_instance__;
-	int										new_zone;
 	int										current_zone;
-	void									*ret;
-	size_t									i;
+	int										new_zone;
 
 	if (!ptr)
 		return (malloc(size));
@@ -59,11 +97,10 @@ void	*realloc(void *ptr, size_t size)
 		free(ptr);
 	if (!is_ptr_valid(ptr, &g__malloc_instance__))
 		return (NULL);
-
 	new_zone = get_zone(size);
 	current_zone = get_zone(((t__malloc_block__*)ptr - 1)->size);
 	if (current_zone != new_zone)
-		return (ptr);
+		return (process_realloc(ptr, size));
 	else /* Stay on the same zone */
 	{
 		if (size <= ((t__malloc_block__*)ptr - 1)->size)
@@ -71,19 +108,13 @@ void	*realloc(void *ptr, size_t size)
 		else
 		{
 			/* check si il y a un LostFragment entre le current et le prochain block*/
-			//if (can_extend(((t__malloc_block__*)ptr - 1), size))
-			//	((t__malloc_block__*)ptr - 1)->size = size;
-			//else
-			if(!(ret = malloc(size)))
-				return (NULL);
-			i = 0;
-			while (i < ((t__malloc_block__*)ptr - 1)->size)
-			{
-				((char*)ret)[i] = ((char*)ptr)[i];
-				i++;
-			}
-			free(ptr); /* free l'ancien maillon */
-			return (ret);
+			if (can_extend(&g__malloc_instance__,
+							((t__malloc_block__*)ptr - 1),
+							size,
+							current_zone))
+				((t__malloc_block__*)ptr - 1)->size = size;
+			else
+				return (process_realloc(ptr, size));
 		}
 	}
 	return (ptr);

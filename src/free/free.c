@@ -2,9 +2,13 @@
 
 void	free(void *ptr)
 {
-	if (!ptr) {
+	t__malloc_block__		*block;
+	if (!ptr)
 		return;
-	}
-	((t__malloc_block__*)ptr - 1)->is_free = 1;
+	block = (t__malloc_block__*)ptr - 1;
+	block->is_free = 1;
+	if (block->size > __MALLOC_SMALL_LIMIT__)
+		munmap(block,
+				(size_t)block->size + sizeof(t__malloc_block__));
 	return ;
 }
