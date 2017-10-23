@@ -521,6 +521,8 @@ int			test_25_bigger_realloc_same_zone(){
 	buf = ft_strdup("wesh");
 	buf = (char*)realloc(buf, 20);
 	free(buf);
+	buf = (char*)malloc(20);
+	free(buf);
 	return (1);
 }
 

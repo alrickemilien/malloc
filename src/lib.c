@@ -1,6 +1,6 @@
 #include "malloc.h"
 
-struct s__malloc_instance__			g__malloc_instance__ = {0, { { 0, 0 }, 0 }, { 0, 0, 0 }, { 0, 0, 0 }};
+struct s__malloc_instance__			g__malloc_instance__ = {0, { { 0, 0 }, {0,0,0,0,0,0,0,0,0}, 0 }, { 0, 0, 0 }, { 0, 0, 0 }};
 struct s__malloc_thread_safe__		g__malloc_thread_safe__ = {
 	PTHREAD_MUTEX_INITIALIZER,
 	{
@@ -63,12 +63,41 @@ void	*new_zone(size_t size)
 	return ((void*)ptr);
 }
 
+void				init_malloc_env()
+{
+		extern char		**environ;
+		char			*malloc_env_vars[9];
+		int				i;
+
+		malloc_env_vars[MallocStackLogging] = "MallocStackLogging";
+		malloc_env_vars[MallocStackLoggingNoCompact] = "MallocStackLoggingNoCompact";
+		malloc_env_vars[MallocScribble] = "MallocScribble";
+		malloc_env_vars[MallocPreScribble] = "MallocPreScribble";
+		malloc_env_vars[MallocGuardEdges] = "MallocGuardEdges";
+		malloc_env_vars[MallocDoNotProtectPrelude] = "MallocDoNotProtectPrelude";
+		malloc_env_vars[MallocDoNotProtectPostlude] = "MallocDoNotProtectPostlude";
+		malloc_env_vars[MallocCheckHeapStart] = "MallocCheckHeapStart";
+		malloc_env_vars[MallocCheckHeapEach] = "MallocCheckHeapEach";
+		while (*environ)
+		{
+			i = 0;
+			while (malloc_env_vars[i])
+			{
+				if (ft_strstr(*environ, malloc_env_vars[i]) == *environ)
+					g__malloc_instance__.options.malloc_env_vars[i] = 1;
+				i++;
+			}
+			environ++;
+		}
+}
+
 void				init(void)
 {
 	int		page_size;
 
 	LOCK( &g__malloc_thread_safe__.global );
 
+	init_malloc_env();
 	page_size = getpagesize();
 	g__malloc_instance__.options.absolute_max_size = SIZE_MAX - (2 * page_size);
 	g__malloc_instance__.options.zone_size[__MALLOC_TINY__] = page_size;

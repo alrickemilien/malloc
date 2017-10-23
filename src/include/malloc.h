@@ -103,6 +103,7 @@ typedef struct	s__malloc_block__
 typedef struct	s__malloc_options__
 {
 	int				zone_size[2];
+	int				malloc_env_vars[9];
 	int				absolute_max_size;
 }				t__malloc_options__;
 
