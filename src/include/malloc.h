@@ -100,6 +100,13 @@ typedef struct	s__malloc_block__
 	int							is_free;
 }				t__malloc_block__;
 
+typedef struct	s__malloc_region__
+{
+	void						*addr;
+	struct s__malloc_region__	*next;
+	int							n;
+}				t__malloc_region__;
+
 typedef struct	s__malloc_options__
 {
 	int				zone_size[2];
