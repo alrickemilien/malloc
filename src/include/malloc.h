@@ -31,6 +31,59 @@
 # define __MALLOC_TINY__			0
 # define __MALLOC_SMALL__			1
 # define __MALLOC_LARGE__			2
+
+/*
+ * * If set, malloc remembers the function call stack at the time of each allocation.
+ */
+# define MallocStackLogging 0
+
+/*
+ * * This option is similar to MallocStackLogging 
+ * * but makes sure that all allocations are logged,
+ * * no matter how small or how short lived the buffer may be.
+ */
+# define MallocStackLoggingNoCompact 1
+
+/*
+ * * If set, free sets each byte of every released block to the value 0x55.
+ */
+# define MallocScribble 2
+
+/*
+ * * If set, malloc sets each byte of a newly allocated block to the value 0xAA.
+ * * This increases the likelihood that a program making assumptions about freshly allocated memory fails.
+ */
+# define MallocPreScribble 3
+
+/*
+ * * If set, malloc adds guard pages before and after large allocations.
+ */
+# define MallocGuardEdges 4
+
+/*
+ * * Fine-grain control over the behavior of MallocGuardEdges:
+ * * If set, malloc does not place a guard page at the head of each large block allocation.
+ */
+# define MallocDoNotProtectPrelude 5
+
+/*
+ * * Fine-grain control over the behavior of MallocGuardEdges:
+ * * If set, malloc does not place a guard page at the tail of each large block allocation.
+ */
+# define MallocDoNotProtectPostlude 6
+
+/*
+ * * Set this variable to the number of allocations before malloc will begin validating the heap.
+ * * If not set, malloc does not validate the heap.
+ */
+# define MallocCheckHeapStart 7
+
+/*
+ * * Set this variable to the number of allocations before malloc should validate the heap.
+ * * If not set, malloc does not validate the heap.
+ */
+# define MallocCheckHeapEach 8
+
 /*
  *		|				|											|
  *		|	T_MALLOC	|					DATA					|

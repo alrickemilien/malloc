@@ -519,9 +519,8 @@ int			test_25_bigger_realloc_same_zone(){
 	int		i;
 
 	buf = ft_strdup("wesh");
-	show_alloc_mem();
 	buf = (char*)realloc(buf, 20);
-	show_alloc_mem();
+	free(buf);
 	return (1);
 }
 
