@@ -4,11 +4,8 @@
 # include "../../libft/libft.h"
 # include <sys/mman.h>
 # include <sys/resource.h>
-# include <stdio.h>
 # include <pthread.h>
 # include <stdint.h>
-// FOR DEBUG
-#include <errno.h>
 
 # define G_MALLOC						g__malloc_instance__
 /*

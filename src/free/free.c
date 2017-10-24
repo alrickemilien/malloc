@@ -31,7 +31,7 @@ static int	is_ptr_valid(
 	t__malloc_block__	*block;
 	t__malloc_block__	*tmp;
 
-	block = ptr - 1;
+	block = ptr;
 	if ( ((size_t)block >= (size_t)instance->zone_addr[__MALLOC_TINY__]
 				&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_TINY__]
 					+ __MALLOC_TINY_ZONE_SIZE__))

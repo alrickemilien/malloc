@@ -95,6 +95,8 @@ void	*malloc(size_t size)
 			return (NULL);
 	LOCK( &g__malloc_thread_safe__.zone[macro] );
 	ret = new_block(&g__malloc_instance__.zone[macro], size);
+	if (g__malloc_instance__.options.malloc_env_vars[MallocPreScribble])
+		ft_memset(ret, 0xAA, ((t__malloc_block__*)ret - 1)->size);
 	UNLOCK( &g__malloc_thread_safe__.zone[macro] );
 //		ft_putnbr(size);
 //		write(1, "\n", 1);
