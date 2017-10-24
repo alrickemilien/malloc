@@ -556,6 +556,18 @@ int			test_27_large_malloc(){
 	return (1);
 }
 
+int			test_28_large_realloc(){
+	char	*buf;
+	int		i;
+
+	i = 0;
+	buf = (char*)malloc(1024 * 127);
+	buf = (char*)realloc(buf, 1024 * 127 + 1024 * 10);
+	show_alloc_mem();
+	free(buf);
+	return (1);
+}
+
 int		main() {
 
 /*	test_0_basic();
@@ -577,6 +589,7 @@ int		main() {
 	test_15_realloc_null_ptr("le test 15");
 	test_22_not_valid_ptr_realloc();*/
 	test_25_bigger_realloc_same_zone();
+	test_28_large_realloc();
 //	test_27_large_malloc();
 	
 	return (1);
