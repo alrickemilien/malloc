@@ -122,7 +122,11 @@ void	*malloc(size_t size)
 		if (!init_zone(macro))
 			return (NULL);
 	LOCK( &g__malloc_thread_safe__.zone[macro] );
-	ret = new_block(&g__malloc_instance__, &g__malloc_instance__.zone[macro], size);
+	if( !(ret = new_block(&g__malloc_instance__, &g__malloc_instance__.zone[macro], size)))
+	{
+		UNLOCK ( &g__malloc_thread_safe__.zone[macro] );
+		return (NULL);
+	}
 	if (g__malloc_instance__.options.malloc_env_vars[MallocPreScribble])
 		ft_memset(ret, 0xAA, ((t__malloc_block__*)ret - 1)->size);
 	UNLOCK( &g__malloc_thread_safe__.zone[macro] );

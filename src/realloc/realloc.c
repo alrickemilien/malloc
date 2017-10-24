@@ -106,6 +106,7 @@ static void put_addr(void *param)
 void	*realloc(void *ptr, size_t size)
 {
 	extern struct s__malloc_instance__		g__malloc_instance__;
+	extern struct s__malloc_thread_safe__   g__malloc_thread_safe__;
 	int										current_zone;
 	int										new_zone;
 
@@ -123,7 +124,11 @@ void	*realloc(void *ptr, size_t size)
 	else /* Stay on the same zone */
 	{
 		if (size <= ((t__malloc_block__*)ptr - 1)->size)
+		{
+			LOCK( &g__malloc_thread_safe__.zone[current_zone] );
 			((t__malloc_block__*)ptr - 1)->size = size;
+			UNLOCK( &g__malloc_thread_safe__.zone[current_zone] );
+		}
 		else
 		{
 			/* check si il y a un LostFragment entre le current et le prochain block*/
@@ -131,7 +136,11 @@ void	*realloc(void *ptr, size_t size)
 						((t__malloc_block__*)ptr - 1),
 						size,
 						current_zone))
+			{
+				LOCK( &g__malloc_thread_safe__.zone[current_zone] );
 				((t__malloc_block__*)ptr - 1)->size = size;
+				UNLOCK( &g__malloc_thread_safe__.zone[current_zone] );
+			}
 			else
 				return (process_realloc(ptr, size));
 		}

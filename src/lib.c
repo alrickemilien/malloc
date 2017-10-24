@@ -120,7 +120,10 @@ int		init_zone(int macro)
 	LOCK( &g__malloc_thread_safe__.zone[macro] );
 
 	if (!(g__malloc_instance__.zone[macro] = new_zone(g__malloc_instance__.options.zone_size[macro])))
+	{
+		UNLOCK( &g__malloc_thread_safe__.zone[macro] );
 		return (0);
+	}
 	g__malloc_instance__.zone[macro]->is_free = 1;
 	g__malloc_instance__.zone[macro]->size = g__malloc_instance__.options.zone_size[macro];
 	g__malloc_instance__.zone_addr[macro] = g__malloc_instance__.zone[macro];
