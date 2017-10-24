@@ -68,6 +68,7 @@ void				init_malloc_env()
 		extern char		**environ;
 		char			*malloc_env_vars[9];
 		int				i;
+		int				j;
 
 		malloc_env_vars[MallocStackLogging] = "MallocStackLogging";
 		malloc_env_vars[MallocStackLoggingNoCompact] = "MallocStackLoggingNoCompact";
@@ -78,16 +79,17 @@ void				init_malloc_env()
 		malloc_env_vars[MallocDoNotProtectPostlude] = "MallocDoNotProtectPostlude";
 		malloc_env_vars[MallocCheckHeapStart] = "MallocCheckHeapStart";
 		malloc_env_vars[MallocCheckHeapEach] = "MallocCheckHeapEach";
-		while (*environ)
+		j = 0;
+		while (environ[j])
 		{
 			i = 0;
 			while (malloc_env_vars[i])
 			{
-				if (ft_strstr(*environ, malloc_env_vars[i]) == *environ)
+				if (ft_strstr(environ[j], malloc_env_vars[i]) == environ[j])
 					g__malloc_instance__.options.malloc_env_vars[i] = 1;
 				i++;
 			}
-			environ++;
+			j++;
 		}
 }
 

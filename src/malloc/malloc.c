@@ -17,10 +17,10 @@ static inline int get_zone(size_t size)
 }
 
 // Dans la boucle il faut detecter les LostSegment made by realloc (BONUS)
-static void
+	static void
 *new_block(
-			t__malloc_block__	**block,
-			size_t				size)
+		t__malloc_block__	**block,
+		size_t				size)
 {
 	t__malloc_block__	*new_block;
 	t__malloc_block__	*tmp;
@@ -41,9 +41,9 @@ static void
 	}
 	if (size > __MALLOC_SMALL_LIMIT__)
 		new_block = mmap(0,
-			size + sizeof(t__malloc_block__),
-			PROT_READ | PROT_WRITE,
-			MAP_ANON | MAP_PRIVATE, -1, 0);
+				size + sizeof(t__malloc_block__),
+				PROT_READ | PROT_WRITE,
+				MAP_ANON | MAP_PRIVATE, -1, 0);
 	else
 		new_block = (void*)(*block + 1) + (*block)->size;
 	new_block->size = size;
@@ -52,6 +52,30 @@ static void
 	*block = new_block;
 	return (new_block + 1);
 }
+
+/*static void put_addr(void *param)
+{
+	const char		*str = "0123456789ABCDEF";
+	int				i;
+	size_t			ptr;
+	size_t			n;
+
+	ptr = (size_t)param;
+	n = 0xF000000000000000;
+	i = 60;
+	write(1, "0x", 2);
+	while (!((ptr & n) >> i))
+	{
+		n >>= 4;
+		i -= 4;
+	}
+	while (n)
+	{
+		write(1, str + ((ptr & n) >> i), 1);
+		n >>= 4;
+		i -= 4;
+	}
+}*/
 
 void	*malloc(size_t size)
 {
@@ -72,9 +96,9 @@ void	*malloc(size_t size)
 	LOCK( &g__malloc_thread_safe__.zone[macro] );
 	ret = new_block(&g__malloc_instance__.zone[macro], size);
 	UNLOCK( &g__malloc_thread_safe__.zone[macro] );
-	ft_putnbr(size);
-	write(1, "\n", 1);
-	((char*)ret)[0] = '*';
-	show_alloc_mem();
+//		ft_putnbr(size);
+//		write(1, "\n", 1);
+//		((char*)ret)[0] = '*';
+//		show_alloc_mem();
 	return (ret);
 }

@@ -1,6 +1,6 @@
 #include "malloc.h"
 
-static void put_addr(void *param)
+/*static void put_addr(void *param)
 {
 	const char		*str = "0123456789ABCDEF";
 	int				i;
@@ -22,6 +22,31 @@ static void put_addr(void *param)
 		n >>= 4;
 		i -= 4;
 	}
+}*/
+
+static int	is_ptr_valid(
+		t__malloc_block__ *ptr,
+		struct s__malloc_instance__ *instance)
+{
+	t__malloc_block__	*block;
+	t__malloc_block__	*tmp;
+
+	block = ptr - 1;
+	if ( ((size_t)block >= (size_t)instance->zone_addr[__MALLOC_TINY__]
+				&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_TINY__]
+					+ __MALLOC_TINY_ZONE_SIZE__))
+			|| (((size_t)block >= (size_t)instance->zone_addr[__MALLOC_SMALL__]
+					&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_SMALL__]
+						+ __MALLOC_SMALL_ZONE_SIZE__))) )
+		return (1);
+	tmp = instance->zone[__MALLOC_LARGE__];
+	while (tmp)
+	{
+		if (tmp == block)
+			return (1);
+		tmp = tmp->next;
+	}
+	return (0);
 }
 
 void	free(void *ptr)
@@ -32,21 +57,19 @@ void	free(void *ptr)
 	if (!ptr)
 		return;
 	block = (t__malloc_block__*)ptr - 1;
-	put_addr(ptr);
-	write(1, "\n", 1);
+//	ft_putendl("FREE CALLED");
+	/*
+	 *		POUR LES TEST DES FUNCTIONS DE LIB_C
+	 */
+	if (!is_ptr_valid(block, &g__malloc_instance__))
+		return ;
+//	put_addr(ptr);
+//	write(1, "\n", 1);
 	block->is_free = 1;
-	ft_putendl("FREE CALLED");
+	if (g__malloc_instance__.options.malloc_env_vars[MallocScribble])
+		ft_memset(ptr, 0x55, (size_t)block->size);
 	if (block->size > __MALLOC_SMALL_LIMIT__)
-	{
-		if (g__malloc_instance__.options.malloc_env_vars[MallocScribble])
-			ft_memset(ptr, 0x55, (size_t)block->size);
 		munmap(block,
 				(size_t)block->size + sizeof(t__malloc_block__));
-	}
-	else
-	{
-		if (g__malloc_instance__.options.malloc_env_vars[MallocScribble])
-			ft_memset(ptr, 0x55, (size_t)block->size);
-	}
 	return ;
 }
