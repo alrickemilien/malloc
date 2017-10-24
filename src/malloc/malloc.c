@@ -16,11 +16,39 @@ static inline int get_zone(size_t size)
 	return (__MALLOC_LARGE__);
 }
 
+static void		*alloc_large(size_t size, int *malloc_env_vars)
+{
+	t__malloc_block__	*new_block;
+	void				*p;
+
+	p = NULL;
+	if (malloc_env_vars[MallocGuardEdges]
+		|| malloc_env_vars[MallocDoNotProtectPostlude])
+	{
+		if (( p = mmap(0, getpagesize(), PROT_NONE,
+			MAP_ANON | MAP_PRIVATE, -1, 0)) == MAP_FAILED )
+			return (NULL);
+	}
+	if (!(new_block = mmap(p, size + sizeof(t__malloc_block__),
+				PROT_READ | PROT_WRITE,
+				MAP_ANON | MAP_PRIVATE, -1, 0)))
+		return (NULL);
+	if (malloc_env_vars[MallocGuardEdges]
+		|| malloc_env_vars[MallocDoNotProtectPrelude])
+	{
+		if ((mmap(new_block + size + sizeof(t__malloc_block__), getpagesize(), PROT_NONE,
+			MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0)) == MAP_FAILED)
+			return (NULL);
+	}
+	return (new_block);	
+}
+
 // Dans la boucle il faut detecter les LostSegment made by realloc (BONUS)
-	static void
+static void
 *new_block(
-		t__malloc_block__	**block,
-		size_t				size)
+		struct s__malloc_instance__	*g__malloc_instance__,
+		t__malloc_block__			**block,
+		size_t						size)
 {
 	t__malloc_block__	*new_block;
 	t__malloc_block__	*tmp;
@@ -40,10 +68,10 @@ static inline int get_zone(size_t size)
 		tmp = tmp->next;
 	}
 	if (size > __MALLOC_SMALL_LIMIT__)
-		new_block = mmap(0,
-				size + sizeof(t__malloc_block__),
-				PROT_READ | PROT_WRITE,
-				MAP_ANON | MAP_PRIVATE, -1, 0);
+	{
+		if (!(new_block = alloc_large(size, g__malloc_instance__->options.malloc_env_vars)))
+			return (NULL);
+	}
 	else
 		new_block = (void*)(*block + 1) + (*block)->size;
 	new_block->size = size;
@@ -94,7 +122,7 @@ void	*malloc(size_t size)
 		if (!init_zone(macro))
 			return (NULL);
 	LOCK( &g__malloc_thread_safe__.zone[macro] );
-	ret = new_block(&g__malloc_instance__.zone[macro], size);
+	ret = new_block(&g__malloc_instance__, &g__malloc_instance__.zone[macro], size);
 	if (g__malloc_instance__.options.malloc_env_vars[MallocPreScribble])
 		ft_memset(ret, 0xAA, ((t__malloc_block__*)ret - 1)->size);
 	UNLOCK( &g__malloc_thread_safe__.zone[macro] );

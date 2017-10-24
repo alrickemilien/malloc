@@ -538,8 +538,25 @@ int			test_26_free_after_ptr(){
 	return (1);
 }
 
-int		main() {
+int			test_27_large_malloc(){
+	char	*buf;
+	int		i;
 
+	i = 0;
+	buf = (char*)malloc(1024 * 127);
+	while (1)
+	{
+		ft_putnbr(i);
+		write(1, "\n", 1);
+		buf[1024 * 125 + i] = 42;
+		i--;
+	}
+//	show_alloc_mem();
+	free(buf);
+	return (1);
+}
+
+int		main() {
 
 /*	test_0_basic();
 	test_1_fork();
@@ -560,6 +577,7 @@ int		main() {
 	test_15_realloc_null_ptr("le test 15");
 	test_22_not_valid_ptr_realloc();*/
 	test_25_bigger_realloc_same_zone();
+	test_27_large_malloc();
 	
 	return (1);
 }
