@@ -577,7 +577,7 @@ int		main() {
 	test_15_realloc_null_ptr("le test 15");
 	test_22_not_valid_ptr_realloc();*/
 	test_25_bigger_realloc_same_zone();
-	test_27_large_malloc();
+//	test_27_large_malloc();
 	
 	return (1);
 }
