@@ -64,6 +64,7 @@ void	free(void *ptr)
 	extern struct s__malloc_instance__		g__malloc_instance__;
 	extern struct s__malloc_thread_safe__	g__malloc_thread_safe__;
 	int										macro;
+	t__malloc_block__						*tmp;
 
 	if (!ptr)
 		return;
@@ -82,8 +83,14 @@ void	free(void *ptr)
 	if (g__malloc_instance__.options.malloc_env_vars[MallocScribble])
 		ft_memset(ptr, 0x55, (size_t)block->size);
 	if (block->size > __MALLOC_SMALL_LIMIT__)
+	{
+		tmp = g__malloc_instance__.zone[macro];
+		while (tmp != block && tmp->next != block)
+			tmp = tmp->next;
+		tmp->next = block->next;
 		munmap(block,
 				(size_t)block->size + sizeof(t__malloc_block__));
+	}
 	UNLOCK( &g__malloc_thread_safe__.zone[macro] );
 	return ;
 }

@@ -562,6 +562,7 @@ int			test_28_large_realloc(){
 
 	i = 0;
 	buf = (char*)malloc(1024 * 127);
+	show_alloc_mem();
 	buf = (char*)realloc(buf, 1024 * 127 + 1024 * 10);
 	show_alloc_mem();
 	free(buf);

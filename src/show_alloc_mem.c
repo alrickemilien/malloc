@@ -24,9 +24,8 @@ static void put_addr(void *param)
 	}
 }
 
-static void		print_zone(t__malloc_block__ *ptr, void *addr, int *total)
+static void		print_zone(t__malloc_block__ *ptr, int *total)
 {
-	put_addr(addr);
 	while (ptr)
 	{
 		write(1, "\n", 1);
@@ -61,8 +60,11 @@ void	show_alloc_mem()
 		if (g__malloc_instance__.zone[i])
 		{
 			ft_putstr(strings[i]);
+			if (i != __MALLOC_LARGE__)
+				put_addr(g__malloc_instance__.zone_addr[i]);
+			else
+				put_addr(g__malloc_instance__.zone[i]);
 			print_zone(g__malloc_instance__.zone[i],
-				g__malloc_instance__.zone_addr[i],
 				&total);
 		}
 		i++;

@@ -34,7 +34,7 @@ static inline int get_zone(size_t size)
 	return (__MALLOC_LARGE__);
 }
 
-	static int
+static int
 can_extend(
 		struct s__malloc_instance__	*instance,
 		t__malloc_block__			*ptr,
@@ -66,9 +66,11 @@ void		*process_realloc(void *ptr, size_t size)
 {
 	void	*ret;
 	size_t	i;
+	t__malloc_block__	*tmp;
 
 	if(!(ret = malloc(size)))
 		return (NULL);
+	tmp = ret;
 	i = 0;
 	while (i < ((t__malloc_block__*)ptr - 1)->size)
 	{
@@ -109,14 +111,15 @@ void	*realloc(void *ptr, size_t size)
 	extern struct s__malloc_thread_safe__   g__malloc_thread_safe__;
 	int										current_zone;
 	int										new_zone;
-
 	
 	if (!ptr)
 		return (malloc(size));
 	if (!size)
 		free(ptr);
 	if (!is_ptr_valid(ptr, &g__malloc_instance__))
+	{
 		return (NULL);
+	}
 	new_zone = get_zone(size);
 	current_zone = get_zone(((t__malloc_block__*)ptr - 1)->size);
 	if (current_zone != new_zone)
