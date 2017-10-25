@@ -56,6 +56,11 @@ static void
 
 	tid = (int)pthread_self();
 	tmp = *block;
+	if (size > __MALLOC_SMALL_LIMIT__)
+	{
+		if (!(new_block = alloc_large(size, g__malloc_instance__->options.malloc_env_vars)))
+			return (NULL);
+	}
 	while (tmp)
 	{
 		if (tmp->is_free && size <= tmp->size)
@@ -67,13 +72,7 @@ static void
 		}
 		tmp = tmp->next;
 	}
-	if (size > __MALLOC_SMALL_LIMIT__)
-	{
-		if (!(new_block = alloc_large(size, g__malloc_instance__->options.malloc_env_vars)))
-			return (NULL);
-	}
-	else
-		new_block = (void*)(*block + 1) + (*block)->size;
+	new_block = (void*)(*block + 1) + (*block)->size;
 	new_block->size = size;
 	new_block->is_free = 0;
 	new_block->next = *block;
