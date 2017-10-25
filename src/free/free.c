@@ -58,13 +58,27 @@ static int	is_ptr_valid(
 	return (0);
 }
 
+static void
+unmap_large(
+		struct s__malloc_instance__ *g__malloc_instance__,
+		t__malloc_block__			*block)
+{
+	t__malloc_block__						*tmp;
+
+	tmp = g__malloc_instance__->zone[__MALLOC_LARGE__];
+	while (tmp != block && tmp->next != block)
+		tmp = tmp->next;
+	tmp->next = block->next;
+	munmap(block,
+			(size_t)block->size + sizeof(t__malloc_block__));
+}
+
 void	free(void *ptr)
 {
 	t__malloc_block__						*block;
 	extern struct s__malloc_instance__		g__malloc_instance__;
 	extern struct s__malloc_thread_safe__	g__malloc_thread_safe__;
 	int										macro;
-	t__malloc_block__						*tmp;
 
 	if (!ptr)
 		return;
@@ -83,14 +97,7 @@ void	free(void *ptr)
 	if (g__malloc_instance__.options.malloc_env_vars[MallocScribble])
 		ft_memset(ptr, 0x55, (size_t)block->size);
 	if (block->size > __MALLOC_SMALL_LIMIT__)
-	{
-		tmp = g__malloc_instance__.zone[macro];
-		while (tmp != block && tmp->next != block)
-			tmp = tmp->next;
-		tmp->next = block->next;
-		munmap(block,
-				(size_t)block->size + sizeof(t__malloc_block__));
-	}
+		unmap_large( &g__malloc_instance__, block );
 	UNLOCK( &g__malloc_thread_safe__.zone[macro] );
 	return ;
 }
