@@ -581,6 +581,7 @@ int			test_29_multi_large_malloc(){
 	free(buf[1]);
 	free(buf[2]);
 	free(buf[3]);
+	show_alloc_mem();
 	return (1);
 }
 
@@ -605,9 +606,9 @@ int		main() {
 	test_15_realloc_null_ptr("le test 15");
 	test_22_not_valid_ptr_realloc();*/
 //	test_27_large_malloc();
-//	test_25_bigger_realloc_same_zone();
+	test_25_bigger_realloc_same_zone();
 	test_28_large_realloc();
-//	test_29_multi_large_malloc();
+	test_29_multi_large_malloc();
 	
 	return (1);
 }

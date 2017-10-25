@@ -66,9 +66,14 @@ unmap_large(
 	t__malloc_block__						*tmp;
 
 	tmp = g__malloc_instance__->zone[__MALLOC_LARGE__];
-	while (tmp != block && tmp->next != block)
-		tmp = tmp->next;
-	tmp->next = block->next;
+	if (block == g__malloc_instance__->zone[__MALLOC_LARGE__])
+		g__malloc_instance__->zone[__MALLOC_LARGE__] = block->next;
+	else
+	{
+		while (tmp && tmp->next != block)
+			tmp = tmp->next;
+		tmp->next = block->next;
+	}
 	munmap(block,
 			(size_t)block->size + sizeof(t__malloc_block__));
 }

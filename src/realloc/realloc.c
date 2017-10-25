@@ -81,7 +81,7 @@ void		*process_realloc(void *ptr, size_t size)
 	return (ret);
 }
 
-static void put_addr(void *param)
+/*static void put_addr(void *param)
 {
 	const char		*str = "0123456789ABCDEF";
 	int				i;
@@ -103,7 +103,7 @@ static void put_addr(void *param)
 		n >>= 4;
 		i -= 4;
 	}
-}
+}*/
 
 void	*realloc(void *ptr, size_t size)
 {
@@ -117,9 +117,7 @@ void	*realloc(void *ptr, size_t size)
 	if (!size)
 		free(ptr);
 	if (!is_ptr_valid(ptr, &g__malloc_instance__))
-	{
 		return (NULL);
-	}
 	new_zone = get_zone(size);
 	current_zone = get_zone(((t__malloc_block__*)ptr - 1)->size);
 	if (current_zone != new_zone)
@@ -148,7 +146,7 @@ void	*realloc(void *ptr, size_t size)
 				return (process_realloc(ptr, size));
 		}
 	}
-	put_addr(ptr);
-	write(1, "\n", 1);
+	//put_addr(ptr);
+//	write(1, "\n", 1);
 	return (ptr);
 }
