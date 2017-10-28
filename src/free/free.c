@@ -1,29 +1,5 @@
 #include "malloc.h"
 
-/*static void put_addr(void *param)
-  {
-  const char		*str = "0123456789ABCDEF";
-  int				i;
-  size_t			ptr;
-  size_t			n;
-
-  ptr = (size_t)param;
-  n = 0xF000000000000000;
-  i = 60;
-  write(1, "0x", 2);
-  while (!((ptr & n) >> i))
-  {
-  n >>= 4;
-  i -= 4;
-  }
-  while (n)
-  {
-  write(1, str + ((ptr & n) >> i), 1);
-  n >>= 4;
-  i -= 4;
-  }
-  }*/
-
 static inline int get_zone(size_t size)
 {
 	if (size < __MALLOC_TINY_LIMIT__)
@@ -39,26 +15,32 @@ static int	is_ptr_valid(
 {
 	t__malloc_block__	*block;
 	t__malloc_block__	*tmp;
+	int					m;
 
 	block = ptr;
-	if ( ((size_t)block >= (size_t)instance->zone_addr[__MALLOC_TINY__]
+	if ( !((size_t)block >= (size_t)instance->zone_addr[__MALLOC_TINY__]
 				&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_TINY__]
 					+ __MALLOC_TINY_ZONE_SIZE__))
-			|| (((size_t)block >= (size_t)instance->zone_addr[__MALLOC_SMALL__]
+			&& !(((size_t)block >= (size_t)instance->zone_addr[__MALLOC_SMALL__]
 					&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_SMALL__]
 						+ __MALLOC_SMALL_ZONE_SIZE__))) )
-		return (1);
-	tmp = instance->zone[__MALLOC_LARGE__];
-	while (tmp)
+		return (0);
+	m = __MALLOC_TINY__;
+	while (m <= __MALLOC_LARGE__)
 	{
-		if (tmp == block)
-			return (1);
-		tmp = tmp->next;
+		tmp = instance->zone[m];
+		while (tmp)
+		{
+			if (tmp == block)
+				return (1);
+			tmp = tmp->next;
+		}
+		m++;
 	}
 	return (0);
 }
 
-static void
+	static void
 unmap_large(
 		struct s__malloc_instance__ *g__malloc_instance__,
 		t__malloc_block__			*block)
