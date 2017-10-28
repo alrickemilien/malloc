@@ -8,10 +8,12 @@
 # include <stdint.h>
 
 # define G_MALLOC						g__malloc_instance__
+
 /*
-	-		CHQUE ZONE DOIT CONTENIR AU MOINS 100 ALLOCATIONS
-	-		En cas d’erreur, les fonctions malloc() et realloc() retournent un pointeur NULL
+	- CHAQUE ZONE DOIT CONTENIR AU MOINS 100 ALLOCATIONS
+	- En cas d’erreur, les fonctions malloc() et realloc() retournent un pointeur NULL
 */
+
 # define __MALLOC_TINY_LIMIT__		993
 # define __MALLOC_SMALL_LIMIT__		127000
 # define __MALLOC_LARGE_LIMIT__		10000000000
@@ -87,31 +89,25 @@
  *		|	BLOCK		|											|
  *		|				|											|
  */
+
 # define LOCK(mutex) pthread_mutex_lock( mutex )
 # define UNLOCK(mutex) pthread_mutex_unlock( mutex )
 
-typedef struct	s__malloc_block__
+typedef struct					s__malloc_block__
 {
 	size_t						size;
 	struct s__malloc_block__	*next;
 	int							is_free;
-}				t__malloc_block__;
+}								t__malloc_block__;
 
-typedef struct	s__malloc_region__
+typedef struct					s__malloc_options__
 {
-	void						*addr;
-	struct s__malloc_region__	*next;
-	int							n;
-}				t__malloc_region__;
+	int							zone_size[2];
+	int							malloc_env_vars[9];
+	int							absolute_max_size;
+}								t__malloc_options__;
 
-typedef struct	s__malloc_options__
-{
-	int				zone_size[2];
-	int				malloc_env_vars[9];
-	int				absolute_max_size;
-}				t__malloc_options__;
-
-struct	s__malloc_instance__
+struct							s__malloc_instance__
 {
 		int						is_init;
 		t__malloc_options__		options;
@@ -119,16 +115,17 @@ struct	s__malloc_instance__
 		void					*zone_addr[3];
 };
 
-struct	s__malloc_thread_safe__
+struct							s__malloc_thread_safe__
 {
-	pthread_mutex_t 		global;
-	pthread_mutex_t 		zone[3];
+	pthread_mutex_t 			global;
+	pthread_mutex_t 			zone[3];
 };
 
-void						init(void);
-int							init_zone(int zone);
-void						print_memory(void *ptr, size_t size);
-void						*new_zone(size_t size);
-void						show_alloc_mem(void);
+void							init(void);
+int								init_zone(int zone);
+void							print_memory(void *ptr, size_t size);
+void							*new_zone(size_t size);
+void							show_alloc_mem(void);
+void							show_alloc_mem_ex(void);
 
 #endif

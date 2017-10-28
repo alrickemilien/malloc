@@ -74,6 +74,35 @@ void	show_alloc_mem()
 	ft_putendl(" octets");
 }
 
+void	show_alloc_mem_ex()
+{
+	extern struct s__malloc_instance__	g__malloc_instance__;
+	int									total;
+	int									i;
+	char								*strings[3] = {"TINY : ", "SMALL : ", "LARGE : "};
+
+	ft_putstr("------------- SHOW_ALLOC_MEM() -------------\n\n");
+	total = 0;
+	i = 0;
+	while (i <= __MALLOC_LARGE__)
+	{
+		if (g__malloc_instance__.zone[i])
+		{
+			ft_putstr(strings[i]);
+			if (i != __MALLOC_LARGE__)
+				put_addr(g__malloc_instance__.zone_addr[i]);
+			else
+				put_addr(g__malloc_instance__.zone[i]);
+			print_zone(g__malloc_instance__.zone[i],
+				&total);
+		}
+		i++;
+	}
+	ft_putstr("Total : ");
+	ft_putnbr(total);
+	ft_putendl(" octets");
+}
+
 /*
  * *	SHOW_ALLOC_MEM_EX()
  * *		-	PID
