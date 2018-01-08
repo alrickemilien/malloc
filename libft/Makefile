@@ -10,6 +10,16 @@
 #                                                                              #
 # **************************************************************************** #
 
+ifeq ($(OS),)
+	OS := $(shell uname -s)
+endif
+
+GCC_SO_OPTIONS= -shared
+
+ifeq ($(OS),Linux)
+	OBJ_OPTIONS	:= -fPIC
+endif
+
 CCFLAGS= -Wall -Wextra -Werror
 
 SRC= ft_isdigit.c ft_memcpy.c ft_putendl_fd.c ft_strclr.c ft_striteri.c ft_strncmp.c\
@@ -35,7 +45,7 @@ $(NAME): $(OBJ)
 	@ar rc $(NAME) $(OBJ)
 
 %.o: %.c
-	@gcc -o $@ -c $< $(CCFLAGS) -fPIC
+	@gcc -o $@ -c $< $(CCFLAGS) $(OBJ_OPTIONS)
 
 clean:
 	@rm -rf $(OBJ)

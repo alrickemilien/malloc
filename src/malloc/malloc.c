@@ -40,7 +40,7 @@ static void		*alloc_large(size_t size, int *malloc_env_vars)
 						MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0)) == MAP_FAILED)
 			return (NULL);
 	}
-	return (new_block);	
+	return (new_block);
 }
 
 // Dans la boucle il faut detecter les LostSegment made by realloc (BONUS)
@@ -116,6 +116,9 @@ void	*malloc(size_t size)
 	//	if (getrlimit(RLIMIT_DATA, &rlim) < 0)
 	//		return (NULL);
 	//	put_addr(((void*)((size_t)rlim.rlim_cur)));
+
+	ft_putstr("je suis ici");
+
 	ret = NULL;
 	if (!g__malloc_instance__.is_init)
 		init();
