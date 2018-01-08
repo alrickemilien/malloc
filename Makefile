@@ -6,34 +6,38 @@ ifeq ($(OS),)
 	OS := $(shell uname -s)
 endif
 
-ifeq ($(OS),"Linux")
-	LD_LIBRARY_PATH := $(LD_LIBRARY_PATH):$(HOME)/malloc
+GCC_SO_OPTIONS= -shared
+
+ifeq ($(OS),Linux)
+	LD_LIBRARY_PATH	:= $(LD_LIBRARY_PATH):$(HOME)/Projects/malloc
+	OBJ_OPTIONS	:= -fPIC
+	SO_OPTIONS	:= -shared -Wl,-soname,
 endif
 
-NAME=libft_malloc_$(HOSTTYPE).so
+NAME= libft_malloc_$(HOSTTYPE).so
 
-CCFLAGS= -Wall -Wextra -Werror 
+CCFLAGS= -Wall -Wextra -Werror
 
-DIR_LIBFT=libft
-
-LIBFT= -lft -L $(DIR_LIBFT) -I $(DIR_LIBFT)
+DIR_LIBFT= libft
 
 LPTHREAD= -lpthread
 
-SRC=src/lib.c\
-	src/show_alloc_mem.c\
-	src/malloc/malloc.c\
-	src/free/free.c\
-	src/calloc/calloc.c\
-	src/realloc/realloc.c\
-	src/print_memory.c\
+LIBFT= -lft -L $(DIR_LIBFT) -I $(DIR_LIBFT)
+
+
+SRC=src/utils.c \
+	src/show_alloc_mem.c \
+	src/malloc/malloc.c \
+	src/free/free.c \
+	src/calloc/calloc.c \
+	src/realloc/realloc.c \
+	src/print_memory.c \
 
 OBJ=$(SRC:.c=.o)
 
 INCLUDE=-I src/include
 
 .PHONY: all clean fclean
-
 
 all: $(NAME)
 
@@ -42,12 +46,12 @@ test: all
 
 $(NAME): $(OBJ)
 	@make -C $(DIR_LIBFT)
-	@gcc $^ -shared -o $@ $(INCLUDE) \
+	@gcc $^ $(SO_OPTIONS) -o $@ $(INCLUDE) \
 	$(LIBFT) $(LPTHREAD) $(CCFLAGS)
 	@ln -sf $(NAME) libft_malloc.so
 
 %.o: %.c
-	@gcc -o $@ -c $< $(INCLUDE) $(CCFLAGS)
+	@gcc -o $@ -c $< $(INCLUDE) $(CCFLAGS) $(OBJ_OPTIONS)
 
 clean:
 	@make clean -C $(DIR_LIBFT)

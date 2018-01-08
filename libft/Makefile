@@ -35,12 +35,12 @@ $(NAME): $(OBJ)
 	@ar rc $(NAME) $(OBJ)
 
 %.o: %.c
-	@gcc -o $@ -c $< $(CCFLAGS)
+	@gcc -o $@ -c $< $(CCFLAGS) -fPIC
 
 clean:
 	@rm -rf $(OBJ)
 
-.PHONY: clean fclean 
+.PHONY: clean fclean
 
 fclean: clean
 	@rm -rf $(NAME)

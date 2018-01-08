@@ -72,11 +72,9 @@ void		*process_realloc(void *ptr, size_t size)
 {
 	void	*ret;
 	size_t	i;
-	t__malloc_block__	*tmp;
 
 	if(!(ret = malloc(size)))
 		return (NULL);
-	tmp = ret;
 	i = 0;
 	while (i < ((t__malloc_block__*)ptr - 1)->size)
 	{

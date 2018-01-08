@@ -52,9 +52,7 @@ static void
 {
 	t__malloc_block__	*new_block;
 	t__malloc_block__	*tmp;
-	int					tid;
 
-	tid = (int)pthread_self();
 	if (size > __MALLOC_SMALL_LIMIT__)
 	{
 		if (!(new_block = alloc_large(size, g__malloc_instance__->options.malloc_env_vars)))
@@ -109,7 +107,6 @@ static void
 
 void	*malloc(size_t size)
 {
-	extern char								**environ;
 	extern struct s__malloc_instance__		g__malloc_instance__;
 	extern struct s__malloc_thread_safe__	g__malloc_thread_safe__;
 	void									*ret;
