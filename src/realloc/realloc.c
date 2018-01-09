@@ -52,19 +52,27 @@ can_extend(
 
 	if (current_zone == __MALLOC_LARGE__)
 		return (0);
+
 	after = (void*) ((size_t)ptr + ptr->size + sizeof(t__malloc_block__));
+
 	if ((size_t)after > (size_t) instance->zone[current_zone]
 			+ instance->options.zone_size[current_zone])
 		return (0);
+
 	if (is_ptr_valid(ptr, instance))
 		return (0);
+
 	tmp = instance->zone[current_zone];
+
 	if (tmp == ptr)
 		return (1);
+
 	while (tmp && tmp->next != ptr)
 		tmp = tmp->next;
+
 	if ( ((size_t)after - (size_t)tmp) < size - ptr->size)
 		return (1);
+
 	return (0);
 }
 
@@ -75,39 +83,18 @@ void		*process_realloc(void *ptr, size_t size)
 
 	if(!(ret = malloc(size)))
 		return (NULL);
+
 	i = 0;
 	while (i < ((t__malloc_block__*)ptr - 1)->size)
 	{
 		((char*)ret)[i] = ((char*)ptr)[i];
 		i++;
 	}
+
 	free(ptr); /* free l'ancien maillon */
+
 	return (ret);
 }
-
-/*static void put_addr(void *param)
-  {
-  const char		*str = "0123456789ABCDEF";
-  int				i;
-  size_t			ptr;
-  size_t			n;
-
-  ptr = (size_t)param;
-  n = 0xF000000000000000;
-  i = 60;
-  write(1, "0x", 2);
-  while (!((ptr & n) >> i))
-  {
-  n >>= 4;
-  i -= 4;
-  }
-  while (n)
-  {
-  write(1, str + ((ptr & n) >> i), 1);
-  n >>= 4;
-  i -= 4;
-  }
-  }*/
 
 void	*realloc(void *ptr, size_t size)
 {
@@ -115,17 +102,27 @@ void	*realloc(void *ptr, size_t size)
 	extern struct s__malloc_thread_safe__   g__malloc_thread_safe__;
 	int										current_zone;
 	int										new_zone;
+	extern void *lastAllocMem;
 
 	if (!ptr)
-		return (malloc(size));
+	{
+		lastAllocMem = malloc(size);
+		return lastAllocMem;
+	}
+
 	if (!size)
 		free(ptr);
+
 	if (!is_ptr_valid(ptr, &g__malloc_instance__))
 		return (NULL);
+
 	new_zone = get_zone(size);
 	current_zone = get_zone(((t__malloc_block__*)ptr - 1)->size);
 	if (current_zone != new_zone)
-		return (process_realloc(ptr, size));
+	{
+		lastAllocMem = process_realloc(ptr, size);
+		return lastAllocMem;
+	}
 	else /* Stay on the same zone */
 	{
 		if (size <= ((t__malloc_block__*)ptr - 1)->size)
@@ -146,11 +143,19 @@ void	*realloc(void *ptr, size_t size)
 				((t__malloc_block__*)ptr - 1)->size = size;
 				UNLOCK( &g__malloc_thread_safe__.zone[current_zone] );
 			}
-			else
-				return (process_realloc(ptr, size));
+			else {
+				if (!ptr)
+				{
+					lastAllocMem = process_realloc(ptr, size);
+					return lastAllocMem;
+				}
+			}
 		}
 	}
-	//put_addr(ptr);
-	//	write(1, "\n", 1);
+
+	lastAllocMem = ptr;
+
+	show_last_alloc_mem();
+
 	return (ptr);
 }

@@ -37,7 +37,7 @@
 # define MallocStackLogging 0
 
 /*
- * * This option is similar to MallocStackLogging 
+ * * This option is similar to MallocStackLogging
  * * but makes sure that all allocations are logged,
  * * no matter how small or how short lived the buffer may be.
  */
@@ -127,5 +127,6 @@ void							print_memory(void *ptr, size_t size);
 void							*new_zone(size_t size);
 void							show_alloc_mem(void);
 void							show_alloc_mem_ex(void);
+void							show_last_alloc_mem(void);
 
 #endif

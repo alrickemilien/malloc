@@ -32,6 +32,7 @@ SRC=src/utils.c \
 	src/calloc/calloc.c \
 	src/realloc/realloc.c \
 	src/print_memory.c \
+	src/show_last_alloc_mem.c \
 
 OBJ=$(SRC:.c=.o)
 

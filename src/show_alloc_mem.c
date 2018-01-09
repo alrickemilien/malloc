@@ -53,6 +53,7 @@ void	show_alloc_mem()
 	char								*strings[3] = {"TINY : ", "SMALL : ", "LARGE : "};
 
 	ft_putstr("------------- SHOW_ALLOC_MEM() -------------\n\n");
+
 	total = 0;
 	i = 0;
 	while (i <= __MALLOC_LARGE__)
@@ -64,11 +65,13 @@ void	show_alloc_mem()
 				put_addr(g__malloc_instance__.zone_addr[i]);
 			else
 				put_addr(g__malloc_instance__.zone[i]);
+
 			print_zone(g__malloc_instance__.zone[i],
 				&total);
 		}
 		i++;
 	}
+
 	ft_putstr("Total : ");
 	ft_putnbr(total);
 	ft_putendl(" octets");
@@ -82,6 +85,7 @@ void	show_alloc_mem_ex()
 	char								*strings[3] = {"TINY : ", "SMALL : ", "LARGE : "};
 
 	ft_putstr("------------- SHOW_ALLOC_MEM() -------------\n\n");
+
 	total = 0;
 	i = 0;
 	while (i <= __MALLOC_LARGE__)
@@ -93,11 +97,13 @@ void	show_alloc_mem_ex()
 				put_addr(g__malloc_instance__.zone_addr[i]);
 			else
 				put_addr(g__malloc_instance__.zone[i]);
+
 			print_zone(g__malloc_instance__.zone[i],
 				&total);
 		}
 		i++;
 	}
+
 	ft_putstr("Total : ");
 	ft_putnbr(total);
 	ft_putendl(" octets");

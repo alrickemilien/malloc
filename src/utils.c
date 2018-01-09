@@ -10,6 +10,9 @@ struct s__malloc_thread_safe__		g__malloc_thread_safe__ = {
 	}
 };
 
+// To delete
+void *lastAllocMem = NULL;
+
 
 /*
  *						G_MALLOC
@@ -66,7 +69,7 @@ void	*new_zone(size_t size)
 void				init_malloc_env()
 {
 		extern char		**environ;
-		char			*malloc_env_vars[9];
+		char			*malloc_env_vars[10];
 		int				i;
 		int				j;
 
@@ -79,6 +82,7 @@ void				init_malloc_env()
 		malloc_env_vars[MallocDoNotProtectPostlude] = "MallocDoNotProtectPostlude";
 		malloc_env_vars[MallocCheckHeapStart] = "MallocCheckHeapStart";
 		malloc_env_vars[MallocCheckHeapEach] = "MallocCheckHeapEach";
+		malloc_env_vars[MallocCheckHeapEach + 1] = 0;
 		j = 0;
 		while (environ[j])
 		{

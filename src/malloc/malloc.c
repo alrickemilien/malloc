@@ -44,8 +44,7 @@ static void		*alloc_large(size_t size, int *malloc_env_vars)
 }
 
 // Dans la boucle il faut detecter les LostSegment made by realloc (BONUS)
-static void
-*new_block(
+static void *new_block(
 		struct s__malloc_instance__	*g__malloc_instance__,
 		t__malloc_block__			**block,
 		size_t						size)
@@ -111,21 +110,31 @@ void	*malloc(size_t size)
 	extern struct s__malloc_thread_safe__	g__malloc_thread_safe__;
 	void									*ret;
 	int										macro;
+	// To  delete
+	extern void *lastAllocMem;
+
 	//	struct rlimit 						rlim;
 
 	//	if (getrlimit(RLIMIT_DATA, &rlim) < 0)
 	//		return (NULL);
 	//	put_addr(((void*)((size_t)rlim.rlim_cur)));
 
-	ft_putstr("je suis ici");
+	show_alloc_mem();
+
+	ft_putnbr(size);
 
 	ret = NULL;
 	if (!g__malloc_instance__.is_init)
 		init();
+	show_alloc_mem();
+
 	macro = get_zone(size);
+
+
 	if (!g__malloc_instance__.zone[macro])
 		if (!init_zone(macro))
 			return (NULL);
+
 	LOCK( &g__malloc_thread_safe__.zone[macro] );
 	if( !(ret = new_block(&g__malloc_instance__, &g__malloc_instance__.zone[macro], size)))
 	{
@@ -135,9 +144,8 @@ void	*malloc(size_t size)
 	if (g__malloc_instance__.options.malloc_env_vars[MallocPreScribble])
 		ft_memset(ret, 0xAA, ((t__malloc_block__*)ret - 1)->size);
 	UNLOCK( &g__malloc_thread_safe__.zone[macro] );
-	//	ft_putnbr(size);
-	//	write(1, "\n", 1);
-	//	((char*)ret)[0] = '*';
-	//	show_alloc_mem();
+
+	lastAllocMem = ret;
+
 	return (ret);
 }
