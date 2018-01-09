@@ -37,7 +37,7 @@ void	show_last_alloc_mem()
 {
 	extern struct s__malloc_instance__	g__malloc_instance__;
 	int									i;
-	char								*strings[3] = {"TINY : ", "SMALL : ", "LARGE : "};
+	char								*strings[3] = {"TINY", "SMALL", "LARGE"};
 	extern void *lastAllocMem;
 	t__malloc_block__ *ptr;
 
@@ -49,7 +49,9 @@ void	show_last_alloc_mem()
 
 	i = get_zone(((t__malloc_block__*)lastAllocMem - 1)->size);
 
+	ft_putstr("The last alloc memory has been set in the zone ");
 	ft_putstr(strings[i]);
+	ft_putstr(" that starts at ");
 
 	if (g__malloc_instance__.zone[i])
 	{
@@ -58,15 +60,17 @@ void	show_last_alloc_mem()
 		else
 			put_addr(g__malloc_instance__.zone[i]);
 
-		put_addr(ptr + 1);
+
+		ft_putstr("\nThe lastAllocMemory ptr takes this range:\n");
+		put_addr(ptr);
 		ft_putstr(" - ");
-		put_addr(((void*)(ptr + 1) + (size_t)ptr->size));
+		put_addr(((void*)(ptr) + (size_t)((ptr -1)->size)));
 		ft_putstr(" : ");
-		ft_putnbr(ptr->size);
+		ft_putnbr(((ptr -1)->size));
 		ft_putstr(" octets\n");
 	}
 
 	ft_putstr("Total : ");
-	ft_putnbr(sizeof(t__malloc_block__) + ptr->size);
+	ft_putnbr(sizeof(t__malloc_block__) + ((ptr -1)->size));
 	ft_putendl(" octets");
 }

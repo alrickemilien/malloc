@@ -121,8 +121,6 @@ void	*malloc(size_t size)
 
 	show_alloc_mem();
 
-	ft_putnbr(size);
-
 	ret = NULL;
 	if (!g__malloc_instance__.is_init)
 		init();
@@ -130,6 +128,7 @@ void	*malloc(size_t size)
 
 	macro = get_zone(size);
 
+	ft_putstr("\nje suis ici dans malloc\n");
 
 	if (!g__malloc_instance__.zone[macro])
 		if (!init_zone(macro))

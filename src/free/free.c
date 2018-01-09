@@ -67,6 +67,9 @@ void	free(void *ptr)
 	extern struct s__malloc_thread_safe__	g__malloc_thread_safe__;
 	int										macro;
 
+
+	ft_putstr("\nje suis ici dans free\n");
+	
 	if (!ptr)
 		return;
 	block = (t__malloc_block__*)ptr - 1;

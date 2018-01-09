@@ -104,6 +104,7 @@ void	*realloc(void *ptr, size_t size)
 	int										new_zone;
 	extern void *lastAllocMem;
 
+	ft_putstr("\nje suis ici dans realloc\n");
 	if (!ptr)
 	{
 		lastAllocMem = malloc(size);
