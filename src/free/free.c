@@ -69,25 +69,34 @@ void	free(void *ptr)
 
 
 	ft_putstr("\nje suis ici dans free\n");
-	
-	if (!ptr)
+	ft_putstr("\non me demande de free le pointeur ");
+	put_addr(ptr);
+	ft_putstr("\n");
+
+
+	if (!ptr) {
+		ft_putstr("\nje quitte free\n");
 		return;
+	}
+
 	block = (t__malloc_block__*)ptr - 1;
-	//	ft_putendl("FREE CALLED");
 	/*
 	 *		POUR LES TEST DES FUNCTIONS DE LIB_C
 	 */
-	if (!is_ptr_valid(block, &g__malloc_instance__))
-		return ;
+	if (!is_ptr_valid(block, &g__malloc_instance__)) {
+		ft_putstr("\nje quitte free\n");
+		return;
+	}
+
 	macro = get_zone(block->size);
 	LOCK( &g__malloc_thread_safe__.zone[macro] );
-	//	put_addr(ptr);
-	//	write(1, "\n", 1);
 	block->is_free = 1;
 	if (g__malloc_instance__.options.malloc_env_vars[MallocScribble])
 		ft_memset(ptr, 0x55, (size_t)block->size);
 	if (block->size > __MALLOC_SMALL_LIMIT__)
 		unmap_large( &g__malloc_instance__, block );
 	UNLOCK( &g__malloc_thread_safe__.zone[macro] );
+
+	ft_putstr("\nje quitte free\n");
 	return ;
 }

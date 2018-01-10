@@ -123,6 +123,7 @@ struct							s__malloc_thread_safe__
 
 void							init(void);
 int								init_zone(int zone);
+void							put_addr(void *param);
 void							print_memory(void *ptr, size_t size);
 void							*new_zone(size_t size);
 void							show_alloc_mem(void);

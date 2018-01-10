@@ -66,6 +66,41 @@ void	*new_zone(size_t size)
 	return ((void*)ptr);
 }
 
+void put_addr(void *ptr) {
+
+  const char		*str = "0123456789ABCDEF";
+  size_t        addr;
+  size_t        mask;
+  int          i;
+
+  mask = 0xF000000000000000;
+  addr = (size_t)ptr;
+
+  i = 60;
+  while (mask) {
+    if (((mask & addr) >> i)) {
+      break ;
+    }
+    mask >>= 4;
+    i -=4;
+  }
+
+  if (!mask) {
+      write(1, "0", 1);
+      return ;
+  }
+
+  write(1, "0x", 2);
+
+  while (mask) {
+    //printf("%lx\n", ((mask & addr) >> i));
+    write(1, str + ((mask & addr) >> i), 1);
+    mask >>= 4;
+    i -= 4;
+  }
+}
+
+
 void				init_malloc_env()
 {
 		extern char		**environ;
