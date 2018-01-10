@@ -108,6 +108,9 @@ void	*realloc(void *ptr, size_t size)
 	if (!ptr)
 	{
 		lastAllocMem = malloc(size);
+		ft_putstr("Realloc return le pointeur ");
+		put_addr(lastAllocMem);
+		ft_putstr("\n");
 		return lastAllocMem;
 	}
 
@@ -122,6 +125,9 @@ void	*realloc(void *ptr, size_t size)
 	if (current_zone != new_zone)
 	{
 		lastAllocMem = process_realloc(ptr, size);
+		ft_putstr("Realloc return le pointeur ");
+		put_addr(lastAllocMem);
+		ft_putstr("\n");
 		return lastAllocMem;
 	}
 	else /* Stay on the same zone */
@@ -156,7 +162,9 @@ void	*realloc(void *ptr, size_t size)
 
 	lastAllocMem = ptr;
 
-	show_last_alloc_mem();
+	ft_putstr("Realloc return le pointeur ");
+	put_addr(ptr);
+	ft_putstr("\n");
 
 	return (ptr);
 }

@@ -61,6 +61,7 @@ static void *new_block(
 	{
 		new_block = (void*)(*block + 1) + (*block)->size;
 		tmp = *block;
+
 		while (tmp)
 		{
 			if (tmp->is_free && size <= tmp->size)
@@ -68,11 +69,18 @@ static void *new_block(
 				tmp->size = size;
 				tmp->is_free = 0;
 				new_block = tmp;
+
 				return (new_block + 1);
 			}
+
 			tmp = tmp->next;
 		}
 	}
+
+	if (size > __MALLOC_TINY_LIMIT__) {
+		show_alloc_mem();
+	}
+
 	new_block->size = size;
 	new_block->is_free = 0;
 	new_block->next = *block;
@@ -95,12 +103,9 @@ void	*malloc(size_t size)
 	//		return (NULL);
 	//	put_addr(((void*)((size_t)rlim.rlim_cur)));
 
-	show_alloc_mem();
-
 	ret = NULL;
 	if (!g__malloc_instance__.is_init)
 		init();
-	show_alloc_mem();
 
 	macro = get_zone(size);
 
@@ -113,6 +118,7 @@ void	*malloc(size_t size)
 	LOCK( &g__malloc_thread_safe__.zone[macro] );
 	if( !(ret = new_block(&g__malloc_instance__, &g__malloc_instance__.zone[macro], size)))
 	{
+		// Ne pas oublier de UNLOCK la zone en cas d'erreur
 		UNLOCK ( &g__malloc_thread_safe__.zone[macro] );
 		return (NULL);
 	}
@@ -122,5 +128,9 @@ void	*malloc(size_t size)
 
 	lastAllocMem = ret;
 
+// To delete
+	ft_putstr("Malloc return le pointeur ");
+	put_addr(ret);
+	ft_putstr("\n");
 	return (ret);
 }

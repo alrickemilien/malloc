@@ -80,6 +80,7 @@ void	free(void *ptr)
 	}
 
 	block = (t__malloc_block__*)ptr - 1;
+
 	/*
 	 *		POUR LES TEST DES FUNCTIONS DE LIB_C
 	 */
@@ -88,13 +89,18 @@ void	free(void *ptr)
 		return;
 	}
 
+
 	macro = get_zone(block->size);
 	LOCK( &g__malloc_thread_safe__.zone[macro] );
 	block->is_free = 1;
 	if (g__malloc_instance__.options.malloc_env_vars[MallocScribble])
 		ft_memset(ptr, 0x55, (size_t)block->size);
-	if (block->size > __MALLOC_SMALL_LIMIT__)
+	ft_putstr("je suis laaaaaaaaaaaaaaaaaaaaaaaaa");
+	if (block->size > __MALLOC_SMALL_LIMIT__) {
+		ft_putnbr(block->size);
+	//	show_alloc_mem();
 		unmap_large( &g__malloc_instance__, block );
+	}
 	UNLOCK( &g__malloc_thread_safe__.zone[macro] );
 
 	ft_putstr("\nje quitte free\n");
