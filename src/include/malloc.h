@@ -6,6 +6,7 @@
 # include <sys/resource.h>
 # include <pthread.h>
 # include <stdint.h>
+# include <stdio.h>
 
 # define G_MALLOC						g__malloc_instance__
 
@@ -91,6 +92,7 @@
  */
 
 # define LOCK(mutex) pthread_mutex_lock( mutex )
+
 # define UNLOCK(mutex) pthread_mutex_unlock( mutex )
 
 typedef struct					s__malloc_block__
@@ -129,5 +131,6 @@ void							*new_zone(size_t size);
 void							show_alloc_mem(void);
 void							show_alloc_mem_ex(void);
 void							show_last_alloc_mem(void);
+void							show_alloc_mem_zone(int zon);
 
 #endif

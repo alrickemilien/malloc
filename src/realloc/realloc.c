@@ -108,14 +108,19 @@ void	*realloc(void *ptr, size_t size)
 	if (!ptr)
 	{
 		lastAllocMem = malloc(size);
-		ft_putstr("Realloc return le pointeur ");
+		ft_putstr("Realloc return le pointeur car le pointeur donne en parametre est null");
 		put_addr(lastAllocMem);
 		ft_putstr("\n");
 		return lastAllocMem;
 	}
 
-	if (!size)
+	if (!size) {
+		ft_putstr("je free ptr dans realloc\n");
+		ft_putstr("on me demande de free le pointeur ");
+		put_addr(ptr);
+		ft_putstr("\n");
 		free(ptr);
+	}
 
 	if (!is_ptr_valid(ptr, &g__malloc_instance__))
 		return (NULL);
@@ -135,6 +140,7 @@ void	*realloc(void *ptr, size_t size)
 		if (size <= ((t__malloc_block__*)ptr - 1)->size)
 		{
 			LOCK( &g__malloc_thread_safe__.zone[current_zone] );
+			ft_putstr("je renvois le meme pointeur je modifie juste la size car la size est plus petite que actuelle\n");
 			((t__malloc_block__*)ptr - 1)->size = size;
 			UNLOCK( &g__malloc_thread_safe__.zone[current_zone] );
 		}
@@ -147,6 +153,9 @@ void	*realloc(void *ptr, size_t size)
 						current_zone))
 			{
 				LOCK( &g__malloc_thread_safe__.zone[current_zone] );
+				ft_putstr("je renvois le meme pointeur je modifie juste la size car je peux extend my size, ma nouvelle size est ");
+				ft_putnbr(size);
+				ft_putstr("\n");
 				((t__malloc_block__*)ptr - 1)->size = size;
 				UNLOCK( &g__malloc_thread_safe__.zone[current_zone] );
 			}
@@ -154,6 +163,10 @@ void	*realloc(void *ptr, size_t size)
 				if (!ptr)
 				{
 					lastAllocMem = process_realloc(ptr, size);
+					ft_putstr("Realloc return le pointeur ");
+					put_addr(lastAllocMem);
+					ft_putstr("\n");
+					ft_putstr("je quitte realloc\n");
 					return lastAllocMem;
 				}
 			}
@@ -165,6 +178,7 @@ void	*realloc(void *ptr, size_t size)
 	ft_putstr("Realloc return le pointeur ");
 	put_addr(ptr);
 	ft_putstr("\n");
+	ft_putstr("je quitte realloc\n");
 
 	return (ptr);
 }

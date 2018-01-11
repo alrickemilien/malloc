@@ -78,13 +78,16 @@ static void *new_block(
 	}
 
 	if (size > __MALLOC_TINY_LIMIT__) {
-		show_alloc_mem();
+		show_alloc_mem_zone(__MALLOC_SMALL__);
+		ft_putnbr(size);
+		ft_putstr("\n");
 	}
 
 	new_block->size = size;
 	new_block->is_free = 0;
 	new_block->next = *block;
 	*block = new_block;
+	ft_putnbr(new_block->size);
 	return (new_block + 1);
 }
 
@@ -110,6 +113,9 @@ void	*malloc(size_t size)
 	macro = get_zone(size);
 
 	ft_putstr("\nje suis ici dans malloc\n");
+	ft_putstr("On me demande d'alloouer ");
+	ft_putnbr(size);
+	ft_putstr(" octets \n");
 
 	if (!g__malloc_instance__.zone[macro])
 		if (!init_zone(macro))
@@ -120,8 +126,13 @@ void	*malloc(size_t size)
 	{
 		// Ne pas oublier de UNLOCK la zone en cas d'erreur
 		UNLOCK ( &g__malloc_thread_safe__.zone[macro] );
+		ft_putstr("Malloc return le pointeur ");
+		put_addr(ret);
+		ft_putstr("\n");
+		ft_putstr("je quitee malloc\n");
 		return (NULL);
 	}
+
 	if (g__malloc_instance__.options.malloc_env_vars[MallocPreScribble])
 		ft_memset(ret, 0xAA, ((t__malloc_block__*)ret - 1)->size);
 	UNLOCK( &g__malloc_thread_safe__.zone[macro] );
@@ -132,5 +143,10 @@ void	*malloc(size_t size)
 	ft_putstr("Malloc return le pointeur ");
 	put_addr(ret);
 	ft_putstr("\n");
+	if (size > __MALLOC_TINY_LIMIT__) {
+		show_alloc_mem_zone(__MALLOC_SMALL__);
+	}
+	ft_putstr("\n");
+	ft_putstr("je quitee malloc\n");
 	return (ret);
 }
