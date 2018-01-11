@@ -16,6 +16,9 @@ static int	is_ptr_valid(
 					&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_SMALL__]
 						+ __MALLOC_SMALL_ZONE_SIZE__))) )
 		return (0);
+
+	ft_putstr("bonjour monsiur\n");
+
 	m = __MALLOC_TINY__;
 	while (m <= __MALLOC_LARGE__)
 	{
@@ -24,8 +27,10 @@ static int	is_ptr_valid(
 		{
 			if (tmp == block)
 				return (1);
+
 			tmp = tmp->next;
 		}
+
 		m++;
 	}
 	return (0);
@@ -48,12 +53,20 @@ can_extend(
 		int							current_zone)
 {
 	void				*after;
-	t__malloc_block__	*tmp;
 
 	if (current_zone == __MALLOC_LARGE__)
 		return (0);
 
+		ft_putstr("in can extend\n");
+		ft_putnbr(ptr->size);
+		ft_putstr("\n");
+		ft_putnbr(size);
+		ft_putstr("\n");
+		put_addr(ptr);
+		ft_putstr("\n");
 	after = (void*) ((size_t)ptr + ptr->size + sizeof(t__malloc_block__));
+	put_addr(after);
+	ft_putstr("\n");
 
 	if ((size_t)after > (size_t) instance->zone[current_zone]
 			+ instance->options.zone_size[current_zone])
@@ -62,16 +75,13 @@ can_extend(
 	if (is_ptr_valid(ptr, instance))
 		return (0);
 
-	tmp = instance->zone[current_zone];
+		ft_putstr("je suis n rut\n");
 
-	if (tmp == ptr)
+
+	if ( ((size_t)after - (size_t)ptr) < size - ptr->size)
 		return (1);
 
-	while (tmp && tmp->next != ptr)
-		tmp = tmp->next;
-
-	if ( ((size_t)after - (size_t)tmp) < size - ptr->size)
-		return (1);
+		ft_putstr("je suis un jambon");
 
 	return (0);
 }
@@ -160,15 +170,13 @@ void	*realloc(void *ptr, size_t size)
 				UNLOCK( &g__malloc_thread_safe__.zone[current_zone] );
 			}
 			else {
-				if (!ptr)
-				{
-					lastAllocMem = process_realloc(ptr, size);
-					ft_putstr("Realloc return le pointeur ");
-					put_addr(lastAllocMem);
-					ft_putstr("\n");
-					ft_putstr("je quitte realloc\n");
-					return lastAllocMem;
-				}
+				ft_putstr("follow\n");
+				lastAllocMem = process_realloc(ptr, size);
+				ft_putstr("Realloc return le pointeur ");
+				put_addr(lastAllocMem);
+				ft_putstr("\n");
+				ft_putstr("je quitte realloc\n");
+				return lastAllocMem;
 			}
 		}
 	}
