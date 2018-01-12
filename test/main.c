@@ -85,7 +85,7 @@ int			test_2_fork(){
 
 int			test_3_strcat(){
 	char	*buf;
-	
+
 	buf = malloc(sizeof(char) * 20);
 	buf[0] = 0;
 	ft_putstr( strcat(buf, "salut"));
@@ -156,7 +156,7 @@ int			test_6_huge_size()
 int			test_8_many_mallocs(){
 
 	char	*buf[10];
-	
+
 	buf[5] = malloc(sizeof(char));
 	buf[7] = malloc(sizeof(char) * 4);
 	buf[2] = malloc(sizeof(char) * 42);
@@ -192,7 +192,7 @@ int			test_8_many_mallocs(){
 
 int			test_9_tiny(){
 	char	*buf[10];
-	
+
 	buf[5] = malloc(sizeof(char));
 	buf[7] = malloc(sizeof(char) * 4);
 	buf[2] = malloc(sizeof(char) * 2);
@@ -591,7 +591,7 @@ int		main() {
 	test_1_fork();
 	test_2_fork();
 	test_3_strcat();
-	
+
 	test_4_strdup("coucou");
 	//test_5_realloc("des ", "dinosaures");
 	test_6_null();
@@ -605,10 +605,10 @@ int		main() {
 	test_14_realloc_null_size("le test 14");
 	test_15_realloc_null_ptr("le test 15");
 	test_22_not_valid_ptr_realloc();*/
-//	test_27_large_malloc();
-	test_25_bigger_realloc_same_zone();
-	test_28_large_realloc();
-	test_29_multi_large_malloc();
-	
+	test_27_large_malloc();
+//	test_25_bigger_realloc_same_zone();
+//	test_28_large_realloc();
+//	test_29_multi_large_malloc();
+
 	return (1);
 }

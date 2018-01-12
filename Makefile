@@ -44,7 +44,8 @@ INCLUDE=-I src/include
 all: $(NAME)
 
 test: all
-	@gcc test/main.c libft_malloc.so -lft $(LIBFT)
+	@cp libft_malloc.so test/libft_malloc.so
+	@gcc $(OBJ_OPTIONS) test/main.c libft_malloc.so $(LIBFT)
 
 $(NAME): $(OBJ)
 	@make -C $(DIR_LIBFT)

@@ -95,7 +95,6 @@ void	free(void *ptr)
 
 	block->is_free = 1;
 
-	ft_putstr("je suis laaaaaaaaaaaaaaaaaaaaaaaaa\n");
 	if (g__malloc_instance__.options.malloc_env_vars[MallocScribble])
 		ft_memset(ptr, 0x55, (size_t)(block->size));
 
