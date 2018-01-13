@@ -81,6 +81,10 @@ void	free(void *ptr)
 
 	block = (t__malloc_block__*)ptr - 1;
 
+	ft_putstr("Le pointeur a pour taille");
+	ft_putnbr(block->size);
+	ft_putstr("\n");
+
 	/*
 	 *		POUR LES TEST DES FUNCTIONS DE LIB_C
 	 */
