@@ -613,11 +613,10 @@ int		main() {
 	// test_13_realloc_inf("lalala");
 	// test_14_realloc_null_size("le test 14");
 	// test_15_realloc_null_ptr("le test 15");
-	// test_22_not_valid_ptr_realloc();
 	// test_25_bigger_realloc_same_zone();
 	// test_27_large_malloc();
-	test_28_large_realloc();
-	 // test_29_multi_large_malloc();
+	// test_28_large_realloc();
+	//  test_29_multi_large_malloc();
 
 	return (1);
 }
