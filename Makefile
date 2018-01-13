@@ -6,12 +6,12 @@ ifeq ($(OS),)
 	OS := $(shell uname -s)
 endif
 
-GCC_SO_OPTIONS= -shared
+SO_OPTIONS	:= -shared
 
 ifeq ($(OS),Linux)
 	LD_LIBRARY_PATH	:= $(LD_LIBRARY_PATH):$(HOME)/Projects/malloc
 	OBJ_OPTIONS	:= -fPIC
-	SO_OPTIONS	:= -shared -Wl,-soname,
+	SO_OPTIONS	= -shared -Wl,-soname,
 endif
 
 NAME= libft_malloc_$(HOSTTYPE).so
@@ -48,10 +48,10 @@ test: all
 	@gcc $(OBJ_OPTIONS) test/main.c libft_malloc.so $(LIBFT)
 
 $(NAME): $(OBJ)
-	@make -C $(DIR_LIBFT)
-	@gcc $^ $(SO_OPTIONS) -o $@ $(INCLUDE) \
+	make -C $(DIR_LIBFT)
+	gcc $^ $(SO_OPTIONS) -o $@ $(INCLUDE) \
 	$(LIBFT) $(LPTHREAD) $(CCFLAGS)
-	@ln -sf $(NAME) libft_malloc.so
+	ln -sf $(NAME) libft_malloc.so
 
 %.o: %.c
 	@gcc -o $@ -c $< $(INCLUDE) $(CCFLAGS) $(OBJ_OPTIONS)
