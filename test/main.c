@@ -566,11 +566,10 @@ int			test_28_large_realloc(){
 	char	*buf;
 	int		i;
 
+	ft_putstr("TEST 28\n");
 	i = 0;
 	buf = (char*)malloc(1024 * 127);
-	show_alloc_mem();
 	buf = (char*)realloc(buf, 1024 * 127 + 1024 * 10);
-	show_alloc_mem();
 	free(buf);
 	return (1);
 }
@@ -582,7 +581,6 @@ int			test_29_multi_large_malloc(){
 	buf[1] = (char*)malloc(1024 * 127);
 	buf[2] = (char*)malloc(1024 * 127);
 	buf[3] = (char*)malloc(1024 * 127);
-	show_alloc_mem();
 
 	buf[0][1024 * 125] = '*';
 	buf[1][1024 * 125] = '*';
@@ -599,27 +597,27 @@ int			test_29_multi_large_malloc(){
 
 int		main() {
 
-	test_0_basic();
-	test_1_fork();
-	test_2_fork();
-	test_3_strcat();
-	test_4_strdup("coucou");
-	test_5_realloc("des ", "dinosaures");
-	test_6_null();
-	test_7_huge_size();
-	test_8_many_mallocs();
-	test_9_tiny();
-	test_10_malloc_realloc("salut10erferfrferfrfef");
-	test_11_malloc_realloc("salut11");
-	test_12_malloc_realloc("salut12");
-	test_13_realloc_inf("lalala");
-	test_14_realloc_null_size("le test 14");
-	test_15_realloc_null_ptr("le test 15");
-	test_22_not_valid_ptr_realloc();
-	test_25_bigger_realloc_same_zone();
-	test_27_large_malloc();
+	// test_0_basic();
+	// test_1_fork();
+	// test_2_fork();
+	// test_3_strcat();
+	// test_4_strdup("coucou");
+	// test_5_realloc("des ", "dinosaures");
+	// test_6_null();
+	// test_7_huge_size();
+	// test_8_many_mallocs();
+	// test_9_tiny();
+	// test_10_malloc_realloc("salut10erferfrferfrfef");
+	// test_11_malloc_realloc("salut11");
+	// test_12_malloc_realloc("salut12");
+	// test_13_realloc_inf("lalala");
+	// test_14_realloc_null_size("le test 14");
+	// test_15_realloc_null_ptr("le test 15");
+	// test_22_not_valid_ptr_realloc();
+	// test_25_bigger_realloc_same_zone();
+	// test_27_large_malloc();
 	test_28_large_realloc();
-	 test_29_multi_large_malloc();
+	 // test_29_multi_large_malloc();
 
 	return (1);
 }

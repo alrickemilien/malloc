@@ -77,8 +77,6 @@ static void *new_block(
 		}
 	}
 
-	show_alloc_mem();
-
 	new_block->size = size;
 	new_block->is_free = 0;
 	new_block->next = *block;

@@ -9,44 +9,6 @@ static inline int get_zone(size_t size)
 	return (__MALLOC_LARGE__);
 }
 
-
-static int	is_ptr_valid(
-		t__malloc_block__ *ptr,
-		struct s__malloc_instance__ *instance)
-{
-	t__malloc_block__	*block;
-	t__malloc_block__	*tmp;
-	int					m;
-
-	block = ptr - 1;
-	if ( !((size_t)block >= (size_t)instance->zone_addr[__MALLOC_TINY__]
-				&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_TINY__]
-					+ __MALLOC_TINY_ZONE_SIZE__))
-			&& !(((size_t)block >= (size_t)instance->zone_addr[__MALLOC_SMALL__]
-					&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_SMALL__]
-						+ __MALLOC_SMALL_ZONE_SIZE__))))
-		return (0);
-
-	ft_putstr("je uis dans le is ptr valid de realloc\n");
-
-	m = __MALLOC_TINY__;
-	while (m <= __MALLOC_LARGE__)
-	{
-		tmp = instance->zone[m];
-		while (tmp)
-		{
-			if (tmp == block)
-				return (1);
-
-			tmp = tmp->next;
-		}
-
-		m++;
-	}
-
-	return (0);
-}
-
 	static int
 can_extend(
 		struct s__malloc_instance__	*instance,
@@ -133,6 +95,9 @@ void	*realloc(void *ptr, size_t size)
 	extern void *lastAllocMem;
 
 	ft_putstr("\nje suis ici dans realloc\n");
+	ft_putstr("On me passe le pointeur ");
+	put_addr(ptr);
+	ft_putstr("\n");
 	if (!ptr)
 	{
 		lastAllocMem = malloc(size);
@@ -150,8 +115,6 @@ void	*realloc(void *ptr, size_t size)
 		free(ptr);
 	}
 
-	if (!is_ptr_valid(ptr, &g__malloc_instance__))
-		return (NULL);
 
 	new_zone = get_zone(size);
 	current_zone = get_zone(((t__malloc_block__*)ptr - 1)->size);
