@@ -533,8 +533,11 @@ int			test_26_free_after_ptr(){
 	char	*buf;
 
 	buf = (char*)malloc(20);
+
 	show_alloc_mem();
+
 	free(buf + 1);
+
 	return (1);
 }
 
@@ -544,6 +547,7 @@ int			test_27_large_malloc(){
 
 	i = 0;
 	buf = (char*)malloc(1024 * 127);
+
 	while (i)
 	{
 		ft_putnbr(i);
@@ -552,7 +556,9 @@ int			test_27_large_malloc(){
 		i--;
 	}
 //	show_alloc_mem();
+
 	free(buf);
+
 	return (1);
 }
 
@@ -577,6 +583,12 @@ int			test_29_multi_large_malloc(){
 	buf[2] = (char*)malloc(1024 * 127);
 	buf[3] = (char*)malloc(1024 * 127);
 	show_alloc_mem();
+
+	buf[0][1024 * 125] = '*';
+	buf[1][1024 * 125] = '*';
+	buf[2][1024 * 125] = '*';
+	buf[3][1024 * 125] = '*';
+
 	free(buf[0]);
 	free(buf[1]);
 	free(buf[2]);
@@ -607,7 +619,7 @@ int		main() {
 	// test_25_bigger_realloc_same_zone();
 	// test_27_large_malloc();
 //	test_28_large_realloc();
-	// test_29_multi_large_malloc();
+	 test_29_multi_large_malloc();
 
 	return (1);
 }

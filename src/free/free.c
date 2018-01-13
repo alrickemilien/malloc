@@ -73,7 +73,7 @@ void	free(void *ptr)
 	put_addr(ptr);
 	ft_putstr("\n");
 
-		show_alloc_mem();
+	//	show_alloc_mem();
 
 
 	if (!ptr) {

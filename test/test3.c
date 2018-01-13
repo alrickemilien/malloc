@@ -2,12 +2,12 @@
 #include <unistd.h>
 #include <strings.h>
 
-#define M (1024 * 1024) 
+#define M (1024 * 1024)
 
-void print(char *s) 
-{ 
-	write(1, s, strlen(s)); 
-} 
+void print(char *s)
+{
+	write(1, s, strlen(s));
+}
 
 int main()
 {
@@ -20,6 +20,7 @@ int main()
 	print(addr1);
 	addr2 = (char*)malloc(16*M);
 	addr3 = (char*)realloc(addr1, 128*M);
+	print("bonjour monsieur\n");
 	addr3[127*M] = 42;
 	print(addr3);
 	return (0);

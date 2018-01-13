@@ -77,11 +77,7 @@ static void *new_block(
 		}
 	}
 
-	if (size > __MALLOC_TINY_LIMIT__) {
-		show_alloc_mem_zone(__MALLOC_SMALL__);
-		ft_putnbr(size);
-		ft_putstr("\n");
-	}
+	show_alloc_mem();
 
 	new_block->size = size;
 	new_block->is_free = 0;
