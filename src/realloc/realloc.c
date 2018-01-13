@@ -134,8 +134,6 @@ void	*realloc(void *ptr, size_t size)
 		free(ptr);
 	}
 
-	if (!is_ptr_valid(ptr, &g__malloc_instance__))
-		return (NULL);
 
 	new_zone = get_zone(size);
 	current_zone = get_zone(((t__malloc_block__*)ptr - 1)->size);
