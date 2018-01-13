@@ -8,14 +8,20 @@ static int	is_ptr_valid(
 	t__malloc_block__	*tmp;
 	int					m;
 
-	block = ptr;
+	block = ptr - 1;
 
 	m = __MALLOC_TINY__;
-	while (m < __MALLOC_LARGE__)
+	while (m <= __MALLOC_LARGE__)
 	{
 		tmp = instance->zone[m];
+
 		while (tmp)
 		{
+			put_addr(block);
+			ft_putstr("\n");
+			put_addr(tmp);
+			ft_putstr("\n");
+			ft_putstr("\n");
 			if (tmp == block)
 				return (1);
 
