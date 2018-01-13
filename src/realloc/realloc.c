@@ -130,9 +130,10 @@ void	*realloc(void *ptr, size_t size)
 	if (current_zone != new_zone)
 	{
 		lastAllocMem = process_realloc(ptr, size);
-		ft_putstr("Realloc return le pointeur ");
+		ft_putstr("Realloc return le pointeur suivant apres un process realloc : ");
 		put_addr(lastAllocMem);
 		ft_putstr("\n");
+		ft_putstr("je quitte realloc");
 		return lastAllocMem;
 	}
 	else /* Stay on the same zone */
@@ -165,6 +166,7 @@ void	*realloc(void *ptr, size_t size)
 					lastAllocMem = process_realloc(ptr, size);
 					ft_putstr("Realloc return le pointeur ");
 					put_addr(lastAllocMem);
+					ft_putstr(" apres avoir vu que il ne pouvais pas extend");
 					ft_putstr("\n");
 					ft_putstr("je quitte realloc\n");
 					return lastAllocMem;

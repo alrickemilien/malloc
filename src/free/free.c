@@ -73,6 +73,8 @@ void	free(void *ptr)
 	put_addr(ptr);
 	ft_putstr("\n");
 
+		show_alloc_mem();
+
 
 	if (!ptr) {
 		ft_putstr("\nje quitte free\n");
@@ -81,7 +83,7 @@ void	free(void *ptr)
 
 	block = (t__malloc_block__*)ptr - 1;
 
-	ft_putstr("Le pointeur a pour taille");
+	ft_putstr("Le pointeur a pour taille ");
 	ft_putnbr(block->size);
 	ft_putstr("\n");
 

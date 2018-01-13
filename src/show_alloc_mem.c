@@ -14,7 +14,7 @@ static void		print_zone(t__malloc_block__ *ptr, int *total)
 			ft_putstr(" : ");
 			ft_putnbr(ptr->size);
 			ft_putstr(" octets\n");
-		//	print_memory(ptr, sizeof(t__malloc_block__) + ptr->size);
+			print_memory(ptr, sizeof(t__malloc_block__) + ptr->size);
 			*total += sizeof(t__malloc_block__) + ptr->size;
 		}
 		ptr = ptr->next;
