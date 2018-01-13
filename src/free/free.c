@@ -25,6 +25,8 @@ static int	is_ptr_valid(
 					&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_SMALL__]
 						+ __MALLOC_SMALL_ZONE_SIZE__))) )
 		return (0);
+
+
 	m = __MALLOC_TINY__;
 	while (m <= __MALLOC_LARGE__)
 	{
@@ -33,8 +35,10 @@ static int	is_ptr_valid(
 		{
 			if (tmp == block)
 				return (1);
+
 			tmp = tmp->next;
 		}
+
 		m++;
 	}
 	return (0);

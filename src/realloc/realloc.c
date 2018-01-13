@@ -1,5 +1,15 @@
 #include "malloc.h"
 
+static inline int get_zone(size_t size)
+{
+	if (size < __MALLOC_TINY_LIMIT__)
+		return (__MALLOC_TINY__);
+	if (size < __MALLOC_SMALL_LIMIT__)
+		return (__MALLOC_SMALL__);
+	return (__MALLOC_LARGE__);
+}
+
+
 static int	is_ptr_valid(
 		t__malloc_block__ *ptr,
 		struct s__malloc_instance__ *instance)
@@ -9,18 +19,12 @@ static int	is_ptr_valid(
 	int					m;
 
 	block = ptr - 1;
-	put_addr((void*)((void*)instance->zone_addr[__MALLOC_TINY__] + __MALLOC_TINY_ZONE_SIZE__));
-	ft_putstr("\n");
-	put_addr((void*)block);
-	ft_putstr("\n");
-	put_addr((void*)((void*)instance->zone_addr[__MALLOC_TINY__]));
-	ft_putstr("\n");
 	if ( !((size_t)block >= (size_t)instance->zone_addr[__MALLOC_TINY__]
 				&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_TINY__]
 					+ __MALLOC_TINY_ZONE_SIZE__))
 			&& !(((size_t)block >= (size_t)instance->zone_addr[__MALLOC_SMALL__]
 					&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_SMALL__]
-						+ __MALLOC_SMALL_ZONE_SIZE__))) )
+						+ __MALLOC_SMALL_ZONE_SIZE__))))
 		return (0);
 
 	ft_putstr("je uis dans le is ptr valid de realloc\n");
@@ -39,16 +43,8 @@ static int	is_ptr_valid(
 
 		m++;
 	}
-	return (0);
-}
 
-static inline int get_zone(size_t size)
-{
-	if (size < __MALLOC_TINY_LIMIT__)
-		return (__MALLOC_TINY__);
-	if (size < __MALLOC_SMALL_LIMIT__)
-		return (__MALLOC_SMALL__);
-	return (__MALLOC_LARGE__);
+	return (0);
 }
 
 	static int
@@ -59,6 +55,7 @@ can_extend(
 		int							current_zone)
 {
 	void				*after;
+	t__malloc_block__        *tmp;
 
 	if (current_zone == __MALLOC_LARGE__)
 		return (0);
@@ -74,16 +71,35 @@ can_extend(
 	put_addr(after);
 	ft_putstr("\n");
 
+	// Check if the new adress is not over the stack
 	if ((size_t)after > (size_t) instance->zone[current_zone]
 			+ instance->options.zone_size[current_zone])
 		return (0);
 
-	if (is_ptr_valid(ptr, instance))
-		return (0);
+	// Get the top of the stack in tmp
+	tmp = instance->zone[current_zone];
 
-
-	if ( ((size_t)after - (size_t)ptr) < size - ptr->size)
+	// In this case, ptr is the top of the stack so it can extend easy
+	if (tmp == ptr)
 		return (1);
+
+	// Get the adress of the block right after ptr
+	while (tmp && tmp->next != ptr)
+		tmp = tmp->next;
+
+	ft_putstr("ici\n");
+	put_addr(after);
+	ft_putstr("\n");
+	put_addr(tmp);
+	ft_putstr("\n");
+
+	ft_putstr("2\n");
+
+	//if ( ((size_t)ptr - (size_t)after) < size - ptr->size)
+	if( (size_t)tmp > (size_t)ptr + size + sizeof(t__malloc_block__) )
+		return (1);
+
+	ft_putstr("3\n");
 
 	return (0);
 }
@@ -134,6 +150,8 @@ void	*realloc(void *ptr, size_t size)
 		free(ptr);
 	}
 
+	if (!is_ptr_valid(ptr, &g__malloc_instance__))
+		return (NULL);
 
 	new_zone = get_zone(size);
 	current_zone = get_zone(((t__malloc_block__*)ptr - 1)->size);
