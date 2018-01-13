@@ -83,17 +83,18 @@ void	free(void *ptr)
 
 	block = (t__malloc_block__*)ptr - 1;
 
-	ft_putstr("Le pointeur a pour taille ");
-	ft_putnbr(block->size);
-	ft_putstr("\n");
 
 	/*
 	 *		POUR LES TEST DES FUNCTIONS DE LIB_C
 	 */
 	if (!is_ptr_valid(block, &g__malloc_instance__)) {
-		ft_putstr("\nje quitte free\n");
+		ft_putstr("\nje quitte free car le pointeur n'est pas valide\n");
 		return;
 	}
+
+	ft_putstr("Le pointeur a pour taille ");
+	ft_putnbr(block->size);
+	ft_putstr("\n");
 
 	macro = get_zone(block->size);
 

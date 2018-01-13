@@ -142,7 +142,7 @@ int			test_6_null()
 	return (1);
 }
 
-int			test_6_huge_size()
+int			test_7_huge_size()
 {
 	char	*buf;
 
@@ -544,7 +544,7 @@ int			test_27_large_malloc(){
 
 	i = 0;
 	buf = (char*)malloc(1024 * 127);
-	while (1)
+	while (i)
 	{
 		ft_putnbr(i);
 		write(1, "\n", 1);
@@ -587,7 +587,7 @@ int			test_29_multi_large_malloc(){
 
 int		main() {
 
-	 test_0_basic();
+	// test_0_basic();
 	// test_1_fork();
 	// test_2_fork();
 	// test_3_strcat();
@@ -604,10 +604,10 @@ int		main() {
 	// test_14_realloc_null_size("le test 14");
 	// test_15_realloc_null_ptr("le test 15");
 	// test_22_not_valid_ptr_realloc();
+	// test_25_bigger_realloc_same_zone();
 	// test_27_large_malloc();
-//	test_25_bigger_realloc_same_zone();
 //	test_28_large_realloc();
-//	test_29_multi_large_malloc();
+	// test_29_multi_large_malloc();
 
 	return (1);
 }
