@@ -8,6 +8,13 @@
 # include <stdint.h>
 # include <stdio.h>
 
+/*
+ * * 	ATTENTION!
+ * * 	Les variables globales depndent d'un processus.
+ * * 	Lors d'un fork, celle ci est duplique et n'est plus partagee
+ * * 	meme si c'est un pointeur
+ */
+
 # define G_MALLOC						g__malloc_instance__
 
 /*
@@ -22,8 +29,9 @@
 # define __MALLOC_TINY_QUANTUM__	16
 # define __MALLOC_SMALL_QUANTUM__	512
 # define __MALLOC_LARGE_QUANTUM__	4000
+
 /*
- *		Gonna * getpagesize()
+ * * Gonna * getpagesize()
  */
 # define __MALLOC_TINY_ZONE_SIZE__	2000000
 # define __MALLOC_SMALL_ZONE_SIZE__	16000000
@@ -109,6 +117,17 @@ typedef struct					s__malloc_options__
 	int							absolute_max_size;
 }								t__malloc_options__;
 
+/*
+ * * Defines an instance of memory allocation (used for malloc, calloc, etc)
+ * * It is a static structure, declared once in the code
+ * *
+ * * int is_init : Tells if the instance has been instancied once
+ * *int						is_init;
+ *t__malloc_options__		options;
+		t__malloc_block__		*zone[3];
+		void					*zone_addr[3];
+ * *
+ */
 struct							s__malloc_instance__
 {
 		int						is_init;

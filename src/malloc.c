@@ -1,12 +1,9 @@
-/*
- *		ATTENTION!
- *		Les variables globales depndent d'un processus.
- *		Lors d'un fork, celle ci est duplique et n'est plus partagee
- *		meme si c'est un pointeur
- */
-
 #include "malloc.h"
 
+/*
+*	* This function identfys the zone bi its size, returnng an int corresponding to the zone between :
+* * __MALLOC_TINY_LIMIT__ - __MALLOC_SMALL__ - __MALLOC_SMALL_LIMIT__
+*/
 static inline int get_zone(size_t size)
 {
 	if (size < __MALLOC_TINY_LIMIT__)

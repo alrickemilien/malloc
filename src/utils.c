@@ -15,15 +15,16 @@ void *lastAllocMem = NULL;
 
 
 /*
- *						G_MALLOC
+ * *						G_MALLOC
  */
 
-/*							THRED SAFE FUNCTIONS
- *							http://www.yolinux.com/TUTORIALS/LinuxTutorialPosixThreads.html
- *
- *					pthread_self()
- *
- *
+/*
+*		*		THRED SAFE FUNCTIONS
+ *	*						http://www.yolinux.com/TUTORIALS/LinuxTutorialPosixThreads.html
+ **
+ *		*			pthread_self()
+ **
+ **
  */
 
 
@@ -100,7 +101,11 @@ void put_addr(void *ptr) {
   }
 }
 
-
+/**
+* * This function initializes an extern char ** environ array
+* * that will be used later in the code to handle
+* * malloc's features
+*/
 void				init_malloc_env()
 {
 		extern char		**environ;
@@ -132,6 +137,10 @@ void				init_malloc_env()
 		}
 }
 
+/*
+** 
+**
+*/
 void				init(void)
 {
 	int		page_size;
@@ -143,9 +152,11 @@ void				init(void)
 	g__malloc_instance__.options.absolute_max_size = SIZE_MAX - (2 * page_size);
 	g__malloc_instance__.options.zone_size[__MALLOC_TINY__] = page_size;
 	g__malloc_instance__.options.zone_size[__MALLOC_SMALL__] = page_size;
+
 	while (g__malloc_instance__.options.zone_size[__MALLOC_TINY__]
 			< __MALLOC_TINY_ZONE_SIZE__)
 		g__malloc_instance__.options.zone_size[__MALLOC_TINY__] += page_size;
+
 	while (g__malloc_instance__.options.zone_size[__MALLOC_SMALL__]
 			< __MALLOC_SMALL_ZONE_SIZE__)
 		g__malloc_instance__.options.zone_size[__MALLOC_SMALL__] += page_size;
@@ -154,10 +165,14 @@ void				init(void)
 	UNLOCK( &g__malloc_thread_safe__.global );
 }
 
+/**
+*	* This function initiaize the structure that identify the zone
+*/
 int		init_zone(int macro)
 {
 	if (macro == __MALLOC_LARGE__)
 		return (1);
+
 	LOCK( &g__malloc_thread_safe__.zone[macro] );
 
 	if (!(g__malloc_instance__.zone[macro] = new_zone(g__malloc_instance__.options.zone_size[macro])))
@@ -165,10 +180,12 @@ int		init_zone(int macro)
 		UNLOCK( &g__malloc_thread_safe__.zone[macro] );
 		return (0);
 	}
+
 	g__malloc_instance__.zone[macro]->is_free = 1;
 	g__malloc_instance__.zone[macro]->size = g__malloc_instance__.options.zone_size[macro];
 	g__malloc_instance__.zone_addr[macro] = g__malloc_instance__.zone[macro];
 
 	UNLOCK( &g__malloc_thread_safe__.zone[macro] );
+
 	return (1);
 }

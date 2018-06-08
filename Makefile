@@ -27,10 +27,10 @@ LIBFT= -lft -L $(DIR_LIBFT) -I $(DIR_LIBFT)
 
 SRC=src/utils.c \
 	src/show_alloc_mem.c \
-	src/malloc/malloc.c \
-	src/free/free.c \
-	src/calloc/calloc.c \
-	src/realloc/realloc.c \
+	src//malloc.c \
+	src//free.c \
+	src/calloc.c \
+	src/realloc.c \
 	src/print_memory.c \
 	src/show_last_alloc_mem.c \
 	src/show_alloc_mem_zone.c \
