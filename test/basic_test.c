@@ -1,7 +1,8 @@
-# include <unistd.h>
-# include <stdlib.h>
+#include <unistd.h>
+#include <stdlib.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include "../libft/libft.h"
 
 
 int main() {
@@ -18,11 +19,14 @@ int main() {
     void *ptr = malloc(rand() % rlim.rlim_cur);
     void *ptr_reallocated = realloc(ptr, rand() % rlim.rlim_cur);
 
+
     free(ptr);
 
     if (ptr != ptr_reallocated) {
       free(ptr_reallocated);
     }
+
+    ft_putstr("freeptr done\n");
   }
 
   return 0;

@@ -52,6 +52,12 @@ void *lastAllocMem = NULL;
    the super-user.
    */
 
+
+/*
+*	* This function wraps the mmap function by creating a new zone
+* * @param
+* * size_t size : size de l'allocation avec mmap
+*/
 void	*new_zone(size_t size)
 {
 	t__malloc_block__	*ptr;
@@ -62,8 +68,11 @@ void	*new_zone(size_t size)
 			MAP_ANON | MAP_PRIVATE,
 			-1, 0)) == MAP_FAILED)
 		return (NULL);
+
 	ptr->size = size;
+
 	ptr->is_free = 1;
+
 	return ((void*)ptr);
 }
 

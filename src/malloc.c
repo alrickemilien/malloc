@@ -13,12 +13,19 @@ static inline int get_zone(size_t size)
 	return (__MALLOC_LARGE__);
 }
 
+/*
+* *  This functon allocates for the special case of large allocations
+* * - When the MallocGuardEdges flag is set, set the PROT_NONE flag to allocate memory, meaning that pages may not be accessed, and create a mini blok at start of the fat block
+* * - Allocated the fat block
+* * - When the MallocGuardEdges flag is set, set the PROT_NONE flag to allocate memory, meaning that pages may not be accessed, and create a mini blok at end of the fat block
+*/
 static void		*alloc_large(size_t size, int *malloc_env_vars)
 {
 	t__malloc_block__	*new_block;
 	void				*p;
 
 	p = NULL;
+
 	if (malloc_env_vars[MallocGuardEdges]
 			|| malloc_env_vars[MallocDoNotProtectPostlude])
 	{
@@ -26,10 +33,13 @@ static void		*alloc_large(size_t size, int *malloc_env_vars)
 						MAP_ANON | MAP_PRIVATE, -1, 0)) == MAP_FAILED )
 			return (NULL);
 	}
+
 	if (!(new_block = mmap(p, size + sizeof(t__malloc_block__),
 					PROT_READ | PROT_WRITE,
-					MAP_ANON | MAP_PRIVATE, -1, 0)))
-		return (NULL);
+					MAP_ANON | MAP_PRIVATE, -1, 0))) {
+						return (NULL);
+	}
+
 	if (malloc_env_vars[MallocGuardEdges]
 			|| malloc_env_vars[MallocDoNotProtectPrelude])
 	{
@@ -37,6 +47,7 @@ static void		*alloc_large(size_t size, int *malloc_env_vars)
 						MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0)) == MAP_FAILED)
 			return (NULL);
 	}
+
 	return (new_block);
 }
 
