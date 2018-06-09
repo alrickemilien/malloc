@@ -98,13 +98,15 @@ void	*malloc(size_t size)
 	extern struct s__malloc_thread_safe__	g__malloc_thread_safe__;
 	void									*ret;
 	int										macro;
+	struct rlimit 				rlim;
+
 	// To  delete
 	extern void *lastAllocMem;
 
-	//	struct rlimit 						rlim;
 
-	//	if (getrlimit(RLIMIT_DATA, &rlim) < 0)
-	//		return (NULL);
+	if (getrlimit(RLIMIT_DATA, &rlim) > 0 && (size_t)rlim.rlim_max < size)
+		return (NULL);
+
 	//	put_addr(((void*)((size_t)rlim.rlim_cur)));
 
 	ret = NULL;

@@ -127,8 +127,7 @@ void	*realloc(void *ptr, size_t size)
 	int										new_zone;
 	extern void *lastAllocMem;
 
-	ft_putstr("\nje suis ici dans realloc\n");
-	ft_putstr("On me passe le pointeur ");
+	ft_putstr("\nje suis ici dans realloc\nOn me passe le pointeur ");
 	put_addr(ptr);
 	ft_putstr("\n");
 	if (!ptr)
@@ -141,15 +140,16 @@ void	*realloc(void *ptr, size_t size)
 	}
 
 	if (!size) {
-		ft_putstr("je free ptr dans realloc\n");
-		ft_putstr("on me demande de free le pointeur ");
+		ft_putstr("je free ptr dans realloc\non me demande de free le pointeur ");
 		put_addr(ptr);
 		ft_putstr("\n");
 		free(ptr);
 	}
 
-	if (!is_ptr_valid(ptr, &g__malloc_instance__))
+	if (!is_ptr_valid(ptr, &g__malloc_instance__)) {
+		ft_putstr("The ptr passed to realloc is not valid\n");
 		return (NULL);
+	}
 
 	new_zone = get_zone(size);
 	current_zone = get_zone(((t__malloc_block__*)ptr - 1)->size);

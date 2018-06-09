@@ -17,8 +17,8 @@ int main() {
 
   for (;;) {
     void *ptr = malloc(rand() % rlim.rlim_cur);
-    void *ptr_reallocated = realloc(ptr, rand() % rlim.rlim_cur);
 
+    void *ptr_reallocated = realloc(ptr, rand() % rlim.rlim_cur);
 
     free(ptr);
 
