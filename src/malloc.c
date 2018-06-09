@@ -116,18 +116,20 @@ void	*malloc(size_t size)
 	ft_putstr("\n");
 
 	ft_putstr("voici l'adresse de la fin de la zone dans laquelle on veut allouer");
-	put_addr((void*)g__malloc_instance__.zone[macro] + g__malloc_instance__.options.zone_size[macro]);
+	ft_putnbr(g__malloc_instance__.options.zone_size[macro]);
+	ft_putstr("\n");
+	put_addr((void*)((size_t)g__malloc_instance__.zone[macro] + g__malloc_instance__.options.zone_size[macro]));
 	ft_putstr("\n");
 
 	LOCK( &g__malloc_thread_safe__.zone[macro] );
-	if( !(ret = new_block(&g__malloc_instance__, &g__malloc_instance__.zone[macro], size)))
+	if( !(ret = new_block(&g__malloc_instance__, &g__malloc_instance__.zone[macro], size)) )
 	{
 		// Ne pas oublier de UNLOCK la zone en cas d'erreur
 		UNLOCK ( &g__malloc_thread_safe__.zone[macro] );
 		ft_putstr("Malloc return le pointeur ");
 		put_addr(ret);
 		ft_putstr("\n");
-		ft_putstr("je quitee malloc\n");
+		ft_putstr("je quitee mallocavec un pinteur null\n");
 		return (NULL);
 	}
 
@@ -139,7 +141,7 @@ void	*malloc(size_t size)
 
 // To delete
 	ft_putstr("Malloc return le pointeur ");
-			put_addr(ret);
+	put_addr(ret);
 	ft_putstr("\n");
 	ft_putstr("je quitee malloc\n");
 	return (ret);

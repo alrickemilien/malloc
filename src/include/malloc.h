@@ -121,11 +121,10 @@ typedef struct					s__malloc_options__
  * * Defines an instance of memory allocation (used for malloc, calloc, etc)
  * * It is a static structure, declared once in the code
  * *
- * * int is_init : Tells if the instance has been instancied once
- * *int						is_init;
- *t__malloc_options__		options;
-		t__malloc_block__		*zone[3];
-		void					*zone_addr[3];
+ * *  int 					is_init : Tells if the instance has been instancied once
+ * *	t__malloc_options__		options;
+ * *	t__malloc_block__		*zone[3];
+ * *	void					*zone_addr[3];
  * *
  */
 struct							s__malloc_instance__

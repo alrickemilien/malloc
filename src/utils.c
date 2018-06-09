@@ -138,8 +138,9 @@ void				init_malloc_env()
 }
 
 /*
-** 
-**
+* * Append page_size to zone size until it reaches __MALLOC_X_ZONE_SIZE__
+* * with X corresponding to a zone
+* *
 */
 void				init(void)
 {

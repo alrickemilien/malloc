@@ -21,6 +21,9 @@ static void		print_zone(t__malloc_block__ *ptr, int *total)
 	}
 }
 
+/*
+* * Foreach zone, put the adresse of the zone
+*/
 void	show_alloc_mem_zone(int zone)
 {
 	extern struct s__malloc_instance__	g__malloc_instance__;
