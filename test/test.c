@@ -9,7 +9,10 @@
 int main() {
         struct rlimit rlim;
 
-        ft_putstr("freeptr done\n");
+
+        srand(time(NULL));
+
+
         /*
          * * Recuper la taille maximale du segment de données d'un processus
          */

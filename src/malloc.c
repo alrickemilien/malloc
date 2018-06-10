@@ -51,7 +51,6 @@ static void		*alloc_large(size_t size, int *malloc_env_vars)
 	return (new_block);
 }
 
-// Dans la boucle il faut detecter les LostSegment made by realloc (BONUS)
 static void *new_block(
 		struct s__malloc_instance__	*g__malloc_instance__,
 		t__malloc_block__			**block,
@@ -120,9 +119,11 @@ void	*malloc(size_t size)
 	ft_putnbr(size);
 	ft_putstr(" octets \n");
 
-	if (!g__malloc_instance__.zone[macro])
+	if (!g__malloc_instance__.zone[macro]) {
+		ft_putstr("je suis la\n");
 		if (!init_zone(macro))
 			return (NULL);
+	}
 
 	ft_putstr("voici l'adresse du début de la zone dans laquelle on veut allouer");
 	put_addr(g__malloc_instance__.zone[macro]);

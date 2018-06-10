@@ -32,40 +32,42 @@ static inline int get_zone(size_t size)
 * * instance->zone_addr[__MALLOC_TINY__] . . . . . . [size, ptr] . . . . . . . . [size, ptr] . . . . . . [size, ptr] . . instance->zone_addr[__MALLOC_SMALL__]
 * *
 */
-static int	is_ptr_valid(
-		t__malloc_block__ *ptr,
-		struct s__malloc_instance__ *instance)
-{
-	t__malloc_block__	*block;
-	t__malloc_block__	*tmp;
-	size_t					m;
-
-	block = ptr;
-
-	if ( !((size_t)block >= (size_t)instance->zone_addr[__MALLOC_TINY__]
-				&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_TINY__]
-					+ __MALLOC_TINY_ZONE_SIZE__))
-			&& !(((size_t)block >= (size_t)instance->zone_addr[__MALLOC_SMALL__]
-					&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_SMALL__]
-						+ __MALLOC_SMALL_ZONE_SIZE__))) )
-		return (0);
-
-	m = __MALLOC_TINY__;
-	while (m <= __MALLOC_LARGE__)
-	{
-		tmp = instance->zone[m];
-		while (tmp)
-		{
-			if (tmp == block)
-				return (1);
-
-			tmp = tmp->next;
-		}
-
-		m++;
-	}
-	return (0);
-}
+// static int	is_ptr_valid(
+// 		t__malloc_block__ *ptr,
+// 		struct s__malloc_instance__ *instance)
+// {
+// 	t__malloc_block__	*block;
+// 	t__malloc_block__	*tmp;
+// 	size_t					m;
+//
+// 	block = ptr;
+//
+// 	if ( !((size_t)block >= (size_t)instance->zone_addr[__MALLOC_TINY__]
+// 				&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_TINY__]
+// 					+ __MALLOC_TINY_ZONE_SIZE__))
+// 			&& !(((size_t)block >= (size_t)instance->zone_addr[__MALLOC_SMALL__]
+// 					&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_SMALL__]
+// 						+ __MALLOC_SMALL_ZONE_SIZE__))) )
+// 		return (0);
+//
+// 	m = __MALLOC_TINY__;
+//
+// 	while (m <= __MALLOC_LARGE__)
+// 	{
+// 		tmp = instance->zone[m];
+// 		while (tmp)
+// 		{
+// 			if (tmp == block)
+// 				return (1);
+//
+// 			tmp = tmp->next;
+// 		}
+//
+// 		m++;
+// 	}
+//
+// 	return (0);
+// }
 
 /*
 * * Allocates the memory in special case zhen the size to alloc is a LARGE allocation
@@ -132,10 +134,10 @@ void	free(void *ptr)
 	/*
 	 *		POUR LES TEST DES FUNCTIONS DE LIB_C
 	 */
-	if (!is_ptr_valid(block, &g__malloc_instance__)) {
-		ft_putstr("\nje quitte free car le pointeur n'est pas valide\n");
-		return;
-	}
+	// if (!is_ptr_valid(block, &g__malloc_instance__)) {
+	// 	ft_putstr("\nje quitte free car le pointeur n'est pas valide\n");
+	// 	return;
+	// }
 
 	ft_putstr("Le pointeur a pour taille ");
 	ft_putnbr(block->size);
