@@ -18,11 +18,11 @@
 # define G_MALLOC						g__malloc_instance__
 
 /*
-	- CHAQUE ZONE DOIT CONTENIR AU MOINS 100 ALLOCATIONS
-	- En cas d’erreur, les fonctions malloc() et realloc() retournent un pointeur NULL
+* * - CHAQUE ZONE DOIT CONTENIR AU MOINS 100 ALLOCATIONS
+* * - En cas d’erreur, les fonctions malloc() et realloc() retournent un pointeur NULL
 */
 
-# define __MALLOC_TINY_LIMIT__		993
+# define __MALLOC_TINY_LIMIT__		992
 # define __MALLOC_SMALL_LIMIT__		127000
 # define __MALLOC_LARGE_LIMIT__		10000000000
 
@@ -31,7 +31,7 @@
 # define __MALLOC_LARGE_QUANTUM__	4000
 
 /*
- * * Gonna * getpagesize()
+ * * Gonna getpagesize()
  */
 # define __MALLOC_TINY_ZONE_SIZE__	2000000
 # define __MALLOC_SMALL_ZONE_SIZE__	16000000
@@ -81,28 +81,21 @@
 # define MallocDoNotProtectPostlude 6
 
 /*
- * * Set this variable to the number of allocations before malloc will begin validating the heap.
- * * If not set, malloc does not validate the heap.
- */
-# define MallocCheckHeapStart 7
-
-/*
  * * Set this variable to the number of allocations before malloc should validate the heap.
  * * If not set, malloc does not validate the heap.
  */
-# define MallocCheckHeapEach 8
-
-/*
- *		|				|											|
- *		|	T_MALLOC	|					DATA					|
- *		|	BLOCK		|											|
- *		|				|											|
- */
+# define MallocCheckHeapEach 7
 
 # define LOCK(mutex) pthread_mutex_lock( mutex )
 
 # define UNLOCK(mutex) pthread_mutex_unlock( mutex )
 
+/*
+ * *		|				    |											|
+ * *		|	T_MALLOC	|					DATAS			  |
+ * *		|	BLOCK		  |											|
+ * *		|				    |											|
+ */
 typedef struct					s__malloc_block__
 {
 	size_t						size;
@@ -110,9 +103,15 @@ typedef struct					s__malloc_block__
 	int							is_free;
 }								t__malloc_block__;
 
+/*
+ * * @params
+ * * int* zone_size : an array including the size of each zone
+ * * int* malloc_env_vars : an array including the env vars
+ */
 typedef struct					s__malloc_options__
 {
 	int							zone_size[2];
+	size_t					zone_quantums[3];
 	int							malloc_env_vars[9];
 	int							absolute_max_size;
 }								t__malloc_options__;
@@ -131,8 +130,8 @@ struct							s__malloc_instance__
 {
 		int						is_init;
 		t__malloc_options__		options;
-		t__malloc_block__		*zone[3];
-		void					*zone_addr[3];
+		t__malloc_block__			*zone[3];
+		void									*zone_addr[3];
 };
 
 struct							s__malloc_thread_safe__
@@ -149,6 +148,7 @@ void							*new_zone(size_t size);
 void							show_alloc_mem(void);
 void							show_alloc_mem_ex(void);
 void							show_last_alloc_mem(void);
-void							show_alloc_mem_zone(int zon);
+void							show_alloc_mem_zone(int zone);
+size_t 						get_size_according_to_quantum_zone(size_t size, int zone);
 
 #endif

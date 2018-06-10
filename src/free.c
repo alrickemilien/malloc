@@ -38,9 +38,10 @@ static int	is_ptr_valid(
 {
 	t__malloc_block__	*block;
 	t__malloc_block__	*tmp;
-	int					m;
+	size_t					m;
 
 	block = ptr;
+
 	if ( !((size_t)block >= (size_t)instance->zone_addr[__MALLOC_TINY__]
 				&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_TINY__]
 					+ __MALLOC_TINY_ZONE_SIZE__))
@@ -89,6 +90,7 @@ unmap_large(
 			tmp = tmp->next;
 		tmp->next = block->next;
 	}
+
 	munmap(block,
 			(size_t)block->size + sizeof(t__malloc_block__));
 }

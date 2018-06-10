@@ -15,9 +15,9 @@ static inline int get_zone(size_t size)
 
 /*
 * *  This functon allocates for the special case of large allocations
-* * - When the MallocGuardEdges flag is set, set the PROT_NONE flag to allocate memory, meaning that pages may not be accessed, and create a mini blok at start of the fat block
+* * - When the MallocGuardEdges flag is set, set the PROT_NONE flag to allocate memory, meaning that pages may not be accessed, and create a pagezise blok at start of the fat block
 * * - Allocated the fat block
-* * - When the MallocGuardEdges flag is set, set the PROT_NONE flag to allocate memory, meaning that pages may not be accessed, and create a mini blok at end of the fat block
+* * - When the MallocGuardEdges flag is set, set the PROT_NONE flag to allocate memory, meaning that pages may not be accessed, and create a pagezise blok at end of the fat block
 */
 static void		*alloc_large(size_t size, int *malloc_env_vars)
 {
@@ -27,7 +27,7 @@ static void		*alloc_large(size_t size, int *malloc_env_vars)
 	p = NULL;
 
 	if (malloc_env_vars[MallocGuardEdges]
-			|| malloc_env_vars[MallocDoNotProtectPostlude])
+			&& !malloc_env_vars[MallocDoNotProtectPostlude])
 	{
 		if (( p = mmap(0, getpagesize(), PROT_NONE,
 						MAP_ANON | MAP_PRIVATE, -1, 0)) == MAP_FAILED )
@@ -41,7 +41,7 @@ static void		*alloc_large(size_t size, int *malloc_env_vars)
 	}
 
 	if (malloc_env_vars[MallocGuardEdges]
-			|| malloc_env_vars[MallocDoNotProtectPrelude])
+			&& !malloc_env_vars[MallocDoNotProtectPrelude])
 	{
 		if ((mmap(new_block + size + sizeof(t__malloc_block__), getpagesize(), PROT_NONE,
 						MAP_ANON | MAP_PRIVATE | MAP_FIXED, -1, 0)) == MAP_FAILED)
@@ -135,7 +135,10 @@ void	*malloc(size_t size)
 	ft_putstr("\n");
 
 	LOCK( &g__malloc_thread_safe__.zone[macro] );
-	if( !(ret = new_block(&g__malloc_instance__, &g__malloc_instance__.zone[macro], size)) )
+	if( !(ret = new_block(
+		&g__malloc_instance__,
+		&g__malloc_instance__.zone[macro],
+		get_size_according_to_quantum_zone(size, macro))) )
 	{
 		// Ne pas oublier de UNLOCK la zone en cas d'erreur
 		UNLOCK ( &g__malloc_thread_safe__.zone[macro] );

@@ -1,6 +1,6 @@
 #include "malloc.h"
 
-struct s__malloc_instance__			g__malloc_instance__ = {0, { { 0, 0 }, {0,0,0,0,0,0,0,0,0}, 0 }, { 0, 0, 0 }, { 0, 0, 0 }};
+struct s__malloc_instance__			g__malloc_instance__ = {0, { { 0, 0 }, { 0, 0, 0 }, {0,0,0,0,0,0,0,0,0}, 0 }, { 0, 0, 0 }, { 0, 0, 0 }};
 struct s__malloc_thread_safe__		g__malloc_thread_safe__ = {
 	PTHREAD_MUTEX_INITIALIZER,
 	{
@@ -118,7 +118,7 @@ void put_addr(void *ptr) {
 void				init_malloc_env()
 {
 		extern char		**environ;
-		char			*malloc_env_vars[10];
+		char			*malloc_env_vars[9];
 		int				i;
 		int				j;
 
@@ -129,7 +129,6 @@ void				init_malloc_env()
 		malloc_env_vars[MallocGuardEdges] = "MallocGuardEdges";
 		malloc_env_vars[MallocDoNotProtectPrelude] = "MallocDoNotProtectPrelude";
 		malloc_env_vars[MallocDoNotProtectPostlude] = "MallocDoNotProtectPostlude";
-		malloc_env_vars[MallocCheckHeapStart] = "MallocCheckHeapStart";
 		malloc_env_vars[MallocCheckHeapEach] = "MallocCheckHeapEach";
 		malloc_env_vars[MallocCheckHeapEach + 1] = 0;
 		j = 0;
@@ -172,6 +171,10 @@ void				init(void)
 		g__malloc_instance__.options.zone_size[__MALLOC_SMALL__] += page_size;
 	g__malloc_instance__.is_init = 1;
 
+	g__malloc_instance__.options.zone_quantums[__MALLOC_TINY__] = __MALLOC_TINY_QUANTUM__;
+	g__malloc_instance__.options.zone_quantums[__MALLOC_SMALL__] = __MALLOC_SMALL_QUANTUM__;
+	g__malloc_instance__.options.zone_quantums[__MALLOC_LARGE__] = getpagesize();
+
 	UNLOCK( &g__malloc_thread_safe__.global );
 }
 
@@ -198,4 +201,17 @@ int		init_zone(int macro)
 	UNLOCK( &g__malloc_thread_safe__.zone[macro] );
 
 	return (1);
+}
+
+size_t get_size_according_to_quantum_zone(size_t size, int zone)
+{
+	size_t quantum;
+	size_t ret;
+
+	quantum = g__malloc_instance__.options.zone_quantums[zone];
+	ret = 0;
+	while (ret < size)
+		ret += quantum;
+
+	return (ret);
 }
