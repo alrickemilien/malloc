@@ -6,7 +6,7 @@
 /*   By: aemilien <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/18 11:40:22 by aemilien          #+#    #+#             */
-/*   Updated: 2018/08/18 14:10:09 by aemilien         ###   ########.fr       */
+/*   Updated: 2018/08/18 14:58:58 by aemilien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ typedef struct					s__malloc_block__
 typedef struct					s__malloc_options__
 {
 	int							zone_size[2];
-	size_t					zone_quantums[3];
+	size_t						zone_quantums[3];
 	int							malloc_env_vars[6];
 	int							absolute_max_size;
 }								t__malloc_options__;
