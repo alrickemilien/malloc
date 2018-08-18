@@ -6,26 +6,11 @@
 /*   By: aemilien <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/18 11:50:48 by aemilien          #+#    #+#             */
-/*   Updated: 2018/08/18 12:19:53 by aemilien         ###   ########.fr       */
+/*   Updated: 2018/08/18 14:11:01 by aemilien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
-
-/*
-** This function identfys the zone bi its size,
-** returnng an int corresponding to the zone between :
-** __MALLOC_TINY_LIMIT__ - __MALLOC_SMALL__ - __MALLOC_SMALL_LIMIT__
-*/
-
-static int		get_zone(size_t size)
-{
-	if (size < __MALLOC_TINY_LIMIT__)
-		return (__MALLOC_TINY__);
-	if (size < __MALLOC_SMALL_LIMIT__)
-		return (__MALLOC_SMALL__);
-	return (__MALLOC_LARGE__);
-}
 
 /*
 **  This functon allocates for the special case of large allocations
@@ -46,8 +31,8 @@ static void		*alloc_large(size_t size, int *malloc_env_vars)
 	void				*p;
 
 	p = NULL;
-	if (malloc_env_vars[MallocGuardEdges]
-			&& !malloc_env_vars[MallocDoNotProtectPostlude])
+	if (malloc_env_vars[MALLOCGUARDEDGES]
+			&& !malloc_env_vars[MALLOCDONOTPROTECTPOSTLUDE])
 	{
 		if ((p = mmap(0, getpagesize(), PROT_NONE,
 						MAP_ANON | MAP_PRIVATE, -1, 0)) == MAP_FAILED)
@@ -57,8 +42,8 @@ static void		*alloc_large(size_t size, int *malloc_env_vars)
 					PROT_READ | PROT_WRITE,
 					MAP_ANON | MAP_PRIVATE, -1, 0)))
 		return (NULL);
-	if (malloc_env_vars[MallocGuardEdges]
-			&& !malloc_env_vars[MallocDoNotProtectPrelude])
+	if (malloc_env_vars[MALLOCGUARDEDGES]
+			&& !malloc_env_vars[MALLOCDONOTPROTECTPRELUDE])
 	{
 		if ((mmap(new_block + size + sizeof(t__malloc_block__),
 						getpagesize(), PROT_NONE,
@@ -129,7 +114,7 @@ void				*malloc(size_t size)
 		UNLOCK(&g__malloc_thread_safe__.zone[macro]);
 		return (NULL);
 	}
-	if (g__malloc_instance__.options.malloc_env_vars[MallocPreScribble])
+	if (g__malloc_instance__.options.malloc_env_vars[MALLOCPRESCRIBBLE])
 		ft_memset(ret, 0xAA, ((t__malloc_block__*)ret - 1)->size);
 	UNLOCK(&g__malloc_thread_safe__.zone[macro]);
 	return (ret);

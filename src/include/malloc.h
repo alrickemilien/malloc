@@ -6,7 +6,7 @@
 /*   By: aemilien <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/18 11:40:22 by aemilien          #+#    #+#             */
-/*   Updated: 2018/08/18 12:12:11 by aemilien         ###   ########.fr       */
+/*   Updated: 2018/08/18 14:10:09 by aemilien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,55 +52,35 @@
 # define __MALLOC_LARGE__			2
 
 /*
-** If set, malloc remembers the function call stack
-** at the time of each allocation.
-*/
-# define MallocStackLogging 0
-
-/*
-** This option is similar to MallocStackLogging
-** but makes sure that all allocations are logged,
-** no matter how small or how short lived the buffer may be.
-*/
-# define MallocStackLoggingNoCompact 1
-
-/*
 ** If set, free sets each byte of every released block to the value 0x55.
 */
-# define MallocScribble 2
+# define MALLOCSCRIBBLE 0
 
 /*
 ** If set, malloc sets each byte of a newly allocated block to the value 0xAA.
 ** This increases the likelihood that a program making assumptions
 ** about freshly allocated memory fails.
 */
-# define MallocPreScribble 3
+# define MALLOCPRESCRIBBLE 1
 
 /*
 ** If set, malloc adds guard pages before and after large allocations.
 */
-# define MallocGuardEdges 4
+# define MALLOCGUARDEDGES 2
 
 /*
 ** Fine-grain control over the behavior of MallocGuardEdges:
 ** If set, malloc does not place a guard
 ** page at the head of each large block allocation.
 */
-# define MallocDoNotProtectPrelude 5
+# define MALLOCDONOTPROTECTPRELUDE 3
 
 /*
 ** Fine-grain control over the behavior of MallocGuardEdges:
 ** If set, malloc does not place a guard page at the tail
 ** of each large block allocation.
 */
-# define MallocDoNotProtectPostlude 6
-
-/*
-** Set this variable to the number of allocations
-** before malloc should validate the heap.
-** If not set, malloc does not validate the heap.
-*/
-# define MallocCheckHeapEach 7
+# define MALLOCDONOTPROTECTPOSTLUDE 4
 
 # define LOCK(mutex) pthread_mutex_lock( mutex )
 
@@ -127,8 +107,8 @@ typedef struct					s__malloc_block__
 typedef struct					s__malloc_options__
 {
 	int							zone_size[2];
-	size_t						zone_quantums[3];
-	int							malloc_env_vars[9];
+	size_t					zone_quantums[3];
+	int							malloc_env_vars[6];
 	int							absolute_max_size;
 }								t__malloc_options__;
 
@@ -166,5 +146,6 @@ void							show_last_alloc_mem(void);
 void							show_alloc_mem_zone(int zone);
 size_t							get_size_according_to_quantum_zone(
 													size_t size, int zone);
+int								get_zone(size_t size);
 
 #endif

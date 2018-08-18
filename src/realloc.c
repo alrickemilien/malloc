@@ -6,13 +6,13 @@
 /*   By: aemilien <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/18 12:29:59 by aemilien          #+#    #+#             */
-/*   Updated: 2018/08/18 12:42:16 by aemilien         ###   ########.fr       */
+/*   Updated: 2018/08/18 14:10:17 by aemilien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "malloc.h"
 
-static int		is_ptr_valid(
+static int			is_ptr_valid(
 		t__malloc_block__ *ptr,
 		t__malloc_instance__ *instance)
 {
@@ -36,16 +36,7 @@ static int		is_ptr_valid(
 	return (0);
 }
 
-static inline int	get_zone(size_t size)
-{
-	if (size < __MALLOC_TINY_LIMIT__)
-		return (__MALLOC_TINY__);
-	if (size < __MALLOC_SMALL_LIMIT__)
-		return (__MALLOC_SMALL__);
-	return (__MALLOC_LARGE__);
-}
-
-static int	can_extend(
+static int			can_extend(
 		t__malloc_instance__ *instance,
 		t__malloc_block__ *ptr,
 		size_t size,
@@ -70,7 +61,7 @@ static int	can_extend(
 	return (0);
 }
 
-void		*process_realloc(void *ptr, size_t size)
+void				*process_realloc(void *ptr, size_t size)
 {
 	void	*ret;
 	size_t	i;
@@ -87,19 +78,23 @@ void		*process_realloc(void *ptr, size_t size)
 	return (ret);
 }
 
-
 /*
-** Changes teh size of the block passed as parameter
+** Changes the size of the block passed as parameter
 */
-static void change_size(void *ptr, int current_zone) {
-	extern t__malloc_instance__				g__malloc_instance__;
+
+static void			change_size_of_block(
+			void *ptr,
+			size_t size,
+			int current_zone)
+{
+	extern struct s__malloc_thread_safe__	g__malloc_thread_safe__;
 
 	LOCK(&g__malloc_thread_safe__.zone[current_zone]);
 	((t__malloc_block__*)ptr - 1)->size = size;
 	UNLOCK(&g__malloc_thread_safe__.zone[current_zone]);
 }
 
-void	*realloc(void *ptr, size_t size)
+void				*realloc(void *ptr, size_t size)
 {
 	extern t__malloc_instance__				g__malloc_instance__;
 	extern struct s__malloc_thread_safe__	g__malloc_thread_safe__;
@@ -118,17 +113,12 @@ void	*realloc(void *ptr, size_t size)
 		return (process_realloc(ptr, size));
 	if (size <= ((t__malloc_block__*)ptr - 1)->size)
 	{
-		change_size
-		LOCK(&g__malloc_thread_safe__.zone[current_zone]);
-		((t__malloc_block__*)ptr - 1)->size = size;
-		UNLOCK(&g__malloc_thread_safe__.zone[current_zone]);
+		change_size_of_block(ptr, size, current_zone);
 		return (ptr);
 	}
 	if (!can_extend(&g__malloc_instance__, ((t__malloc_block__*)ptr - 1),
 					size, current_zone))
 		return (process_realloc(ptr, size));
-	LOCK(&g__malloc_thread_safe__.zone[current_zone]);
-	((t__malloc_block__*)ptr - 1)->size = size;
-	UNLOCK(&g__malloc_thread_safe__.zone[current_zone]);
+	change_size_of_block(ptr, size, current_zone);
 	return (ptr);
 }
