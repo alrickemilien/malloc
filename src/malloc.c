@@ -99,14 +99,8 @@ void	*malloc(size_t size)
 	int										macro;
 	struct rlimit 				rlim;
 
-	// To  delete
-	extern void *lastAllocMem;
-
-
 	if (getrlimit(RLIMIT_DATA, &rlim) > 0 && (size_t)rlim.rlim_max < size)
 		return (NULL);
-
-	//	put_addr(((void*)((size_t)rlim.rlim_cur)));
 
 	ret = NULL;
 	if (!g__malloc_instance__.is_init)
@@ -114,28 +108,13 @@ void	*malloc(size_t size)
 
 	macro = get_zone(size);
 
-	ft_putstr("\nje suis ici dans malloc\n");
-	ft_putstr("On me demande d'alloouer ");
-	ft_putnbr(size);
-	ft_putstr(" octets \n");
-
 	if (!g__malloc_instance__.zone[macro]) {
-		ft_putstr("je suis la\n");
 		if (!init_zone(macro))
 			return (NULL);
 	}
 
-	ft_putstr("voici l'adresse du début de la zone dans laquelle on veut allouer");
-	put_addr(g__malloc_instance__.zone[macro]);
-	ft_putstr("\n");
-
-	ft_putstr("voici l'adresse de la fin de la zone dans laquelle on veut allouer");
-	ft_putnbr(g__malloc_instance__.options.zone_size[macro]);
-	ft_putstr("\n");
-	put_addr((void*)((size_t)g__malloc_instance__.zone[macro] + g__malloc_instance__.options.zone_size[macro]));
-	ft_putstr("\n");
-
 	LOCK( &g__malloc_thread_safe__.zone[macro] );
+
 	if( !(ret = new_block(
 		&g__malloc_instance__,
 		&g__malloc_instance__.zone[macro],
@@ -143,23 +122,13 @@ void	*malloc(size_t size)
 	{
 		// Ne pas oublier de UNLOCK la zone en cas d'erreur
 		UNLOCK ( &g__malloc_thread_safe__.zone[macro] );
-		ft_putstr("Malloc return le pointeur ");
-		put_addr(ret);
-		ft_putstr("\n");
-		ft_putstr("je quitee mallocavec un pinteur null\n");
 		return (NULL);
 	}
 
 	if (g__malloc_instance__.options.malloc_env_vars[MallocPreScribble])
 		ft_memset(ret, 0xAA, ((t__malloc_block__*)ret - 1)->size);
+
 	UNLOCK( &g__malloc_thread_safe__.zone[macro] );
 
-	lastAllocMem = ret;
-
-// To delete
-	ft_putstr("Malloc return le pointeur ");
-	put_addr(ret);
-	ft_putstr("\n");
-	ft_putstr("je quitee malloc\n");
 	return (ret);
 }

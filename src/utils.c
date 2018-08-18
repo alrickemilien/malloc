@@ -10,9 +10,6 @@ struct s__malloc_thread_safe__ g__malloc_thread_safe__ = {
 								}
 };
 
-// To delete
-void *lastAllocMem = NULL;
-
 /*
  * *		THRED SAFE FUNCTIONS
  * *						http://www.yolinux.com/TUTORIALS/LinuxTutorialPosixThreads.html
@@ -118,7 +115,7 @@ void    init_malloc_env()
 /*
  * * Append page_size to zone size until it reaches __MALLOC_X_ZONE_SIZE__
  * * with X corresponding to a zone
- * *
+ * * The options.zone_size[__MALLOC_LARGE__] is set to 0 at start, but will evolve during the programm by allocations and frees
  */
 void    init(void)
 {
@@ -131,7 +128,6 @@ void    init(void)
 								g__malloc_instance__.options.absolute_max_size = SIZE_MAX - (2 * page_size);
 								g__malloc_instance__.options.zone_size[__MALLOC_TINY__] = 0;
 								g__malloc_instance__.options.zone_size[__MALLOC_SMALL__] = 0;
-								g__malloc_instance__.options.zone_size[__MALLOC_LARGE__] = 0;
 
 								while (g__malloc_instance__.options.zone_size[__MALLOC_TINY__]
 															< __MALLOC_TINY_ZONE_SIZE__)

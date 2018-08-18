@@ -5,6 +5,7 @@ static void		print_zone(t__malloc_block__ *ptr, int *total)
 	while (ptr)
 	{
 		write(1, "\n", 1);
+		
 		if (!ptr->is_free)
 		{
 			write(1, "\n", 1);

@@ -9,7 +9,6 @@
 int main() {
         struct rlimit rlim;
 
-
         srand(time(NULL));
 
 

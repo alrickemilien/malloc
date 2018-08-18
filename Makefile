@@ -32,7 +32,6 @@ SRC=src/utils.c \
 	src/calloc.c \
 	src/realloc.c \
 	src/print_memory.c \
-	src/show_last_alloc_mem.c \
 	src/show_alloc_mem_zone.c \
 
 OBJ=$(SRC:.c=.o)
@@ -44,7 +43,6 @@ INCLUDE=-I src/include
 all: $(NAME)
 
 test: all
-	@cp libft_malloc.so test/libft_malloc.so
 	@gcc $(OBJ_OPTIONS) test/main.c libft_malloc.so $(LIBFT)
 
 $(NAME): $(OBJ)
