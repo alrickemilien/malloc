@@ -6,4 +6,4 @@ a.out
 test*
 !test/test42/*.c
 !test/
-!testThread/*.c
+!test/testThread/*.c
