@@ -4,4 +4,6 @@
 a.out
 *.so
 test*
-!test
+!test/test42/*.c
+!test/
+!testThread/*.c
