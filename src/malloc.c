@@ -6,7 +6,7 @@
 /*   By: aemilien <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/18 11:50:48 by aemilien          #+#    #+#             */
-/*   Updated: 2018/08/18 14:11:01 by aemilien         ###   ########.fr       */
+/*   Updated: 2018/08/18 14:41:00 by aemilien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,30 @@ static void		*alloc_large(size_t size, int *malloc_env_vars)
 	return (new_block);
 }
 
-static void		*new_block(t__malloc_instance__ *g__malloc_instance__,
-						t__malloc_block__ **block,
-						size_t size)
+static void		*search_freed_block(
+			t__malloc_block__ **block,
+			size_t size)
+{
+	t__malloc_block__		*tmp;
+
+	tmp = *block;
+	while (tmp)
+	{
+		if (tmp->is_free && size <= tmp->size)
+		{
+			tmp->size = size;
+			tmp->is_free = 0;
+			return (tmp + 1);
+		}
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
+static void		*new_block(
+					t__malloc_instance__ *g__malloc_instance__,
+					t__malloc_block__ **block,
+					size_t size)
 {
 	t__malloc_block__		*new_block;
 	t__malloc_block__		*tmp;
@@ -70,18 +91,8 @@ static void		*new_block(t__malloc_instance__ *g__malloc_instance__,
 	else
 	{
 		new_block = (void*)(*block + 1) + (*block)->size;
-		tmp = *block;
-		while (tmp)
-		{
-			if (tmp->is_free && size <= tmp->size)
-			{
-				tmp->size = size;
-				tmp->is_free = 0;
-				new_block = tmp;
-				return (new_block + 1);
-			}
-			tmp = tmp->next;
-		}
+		if ((tmp = search_freed_block(block, size)))
+			return (tmp);
 	}
 	new_block->size = size;
 	new_block->is_free = 0;
@@ -90,7 +101,7 @@ static void		*new_block(t__malloc_instance__ *g__malloc_instance__,
 	return (new_block + 1);
 }
 
-void				*malloc(size_t size)
+void			*malloc(size_t size)
 {
 	extern t__malloc_instance__				g__malloc_instance__;
 	extern struct s__malloc_thread_safe__	g__malloc_thread_safe__;
@@ -100,7 +111,6 @@ void				*malloc(size_t size)
 
 	if (getrlimit(RLIMIT_DATA, &rlim) > 0 && (size_t)rlim.rlim_max < size)
 		return (NULL);
-	ret = NULL;
 	if (!g__malloc_instance__.is_init)
 		init();
 	macro = get_zone(size);
