@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   malloc.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aemilien <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/08/18 11:40:22 by aemilien          #+#    #+#             */
+/*   Updated: 2018/08/18 12:12:11 by aemilien         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MALLOC_H
 # define MALLOC_H
 
@@ -5,21 +17,20 @@
 # include <sys/mman.h>
 # include <sys/resource.h>
 # include <pthread.h>
-# include <stdint.h>
-# include <stdio.h>
 
 /*
- * * 	ATTENTION!
- * * 	Les variables globales depndent d'un processus.
- * * 	Lors d'un fork, celle ci est duplique et n'est plus partagee
- * * 	meme si c'est un pointeur
- */
+** 	ATTENTION!
+** 	Les variables globales depndent d'un processus.
+** 	Lors d'un fork, celle ci est duplique et n'est plus partagee
+** 	meme si c'est un pointeur
+*/
 
 # define G_MALLOC						g__malloc_instance__
 
 /*
-* * - CHAQUE ZONE DOIT CONTENIR AU MOINS 100 ALLOCATIONS
-* * - En cas d’erreur, les fonctions malloc() et realloc() retournent un pointeur NULL
+** CHAQUE ZONE DOIT CONTENIR AU MOINS 100 ALLOCATIONS
+** En cas d’erreur, les fonctions malloc() et realloc()
+** retournent un pointeur NULL
 */
 
 # define __MALLOC_TINY_LIMIT__		992
@@ -31,8 +42,8 @@
 # define __MALLOC_LARGE_QUANTUM__	4000
 
 /*
- * * Gonna getpagesize()
- */
+** Gonna getpagesize()
+*/
 # define __MALLOC_TINY_ZONE_SIZE__	2000000
 # define __MALLOC_SMALL_ZONE_SIZE__	16000000
 
@@ -41,49 +52,54 @@
 # define __MALLOC_LARGE__			2
 
 /*
- * * If set, malloc remembers the function call stack at the time of each allocation.
- */
+** If set, malloc remembers the function call stack
+** at the time of each allocation.
+*/
 # define MallocStackLogging 0
 
 /*
- * * This option is similar to MallocStackLogging
- * * but makes sure that all allocations are logged,
- * * no matter how small or how short lived the buffer may be.
- */
+** This option is similar to MallocStackLogging
+** but makes sure that all allocations are logged,
+** no matter how small or how short lived the buffer may be.
+*/
 # define MallocStackLoggingNoCompact 1
 
 /*
- * * If set, free sets each byte of every released block to the value 0x55.
- */
+** If set, free sets each byte of every released block to the value 0x55.
+*/
 # define MallocScribble 2
 
 /*
- * * If set, malloc sets each byte of a newly allocated block to the value 0xAA.
- * * This increases the likelihood that a program making assumptions about freshly allocated memory fails.
- */
+** If set, malloc sets each byte of a newly allocated block to the value 0xAA.
+** This increases the likelihood that a program making assumptions
+** about freshly allocated memory fails.
+*/
 # define MallocPreScribble 3
 
 /*
- * * If set, malloc adds guard pages before and after large allocations.
- */
+** If set, malloc adds guard pages before and after large allocations.
+*/
 # define MallocGuardEdges 4
 
 /*
- * * Fine-grain control over the behavior of MallocGuardEdges:
- * * If set, malloc does not place a guard page at the head of each large block allocation.
- */
+** Fine-grain control over the behavior of MallocGuardEdges:
+** If set, malloc does not place a guard
+** page at the head of each large block allocation.
+*/
 # define MallocDoNotProtectPrelude 5
 
 /*
- * * Fine-grain control over the behavior of MallocGuardEdges:
- * * If set, malloc does not place a guard page at the tail of each large block allocation.
- */
+** Fine-grain control over the behavior of MallocGuardEdges:
+** If set, malloc does not place a guard page at the tail
+** of each large block allocation.
+*/
 # define MallocDoNotProtectPostlude 6
 
 /*
- * * Set this variable to the number of allocations before malloc should validate the heap.
- * * If not set, malloc does not validate the heap.
- */
+** Set this variable to the number of allocations
+** before malloc should validate the heap.
+** If not set, malloc does not validate the heap.
+*/
 # define MallocCheckHeapEach 7
 
 # define LOCK(mutex) pthread_mutex_lock( mutex )
@@ -91,11 +107,11 @@
 # define UNLOCK(mutex) pthread_mutex_unlock( mutex )
 
 /*
- * *		|				    |											|
- * *		|	T_MALLOC	|					DATAS			  |
- * *		|	BLOCK		  |											|
- * *		|				    |											|
- */
+**		|				    |								|
+**		|	T_MALLOC		|					DATAS		|
+**		|	BLOCK		  	|								|
+**		|				    |								|
+*/
 typedef struct					s__malloc_block__
 {
 	size_t						size;
@@ -104,40 +120,39 @@ typedef struct					s__malloc_block__
 }								t__malloc_block__;
 
 /*
- * * @params
- * * int* zone_size : an array including the size of each zone
- * * int* malloc_env_vars : an array including the env vars
- */
+** @params
+** int* zone_size : an array including the size of each zone
+** int* malloc_env_vars : an array including the env vars
+*/
 typedef struct					s__malloc_options__
 {
 	int							zone_size[2];
-	size_t					zone_quantums[3];
+	size_t						zone_quantums[3];
 	int							malloc_env_vars[9];
 	int							absolute_max_size;
 }								t__malloc_options__;
 
 /*
- * * Defines an instance of memory allocation (used for malloc, calloc, etc)
- * * It is a static structure, declared once in the code
- * *
- * *  int 					is_init : Tells if the instance has been instancied once
- * *	t__malloc_options__		options;
- * *	t__malloc_block__		*zone[3];
- * *	void					*zone_addr[3];
- * *
- */
-struct							s__malloc_instance__
+** Defines an instance of memory allocation
+** (used for malloc, calloc, etc)
+** It is a static structure, declared once in the code
+**  int 				is_init : Tells if the instance has been instancied once
+**	t__malloc_options__	options;
+**	t__malloc_block__	*zone[3];
+**	void				*zone_addr[3];
+*/
+typedef struct					s__malloc_instance__
 {
-		int						is_init;
-		t__malloc_options__		options;
-		t__malloc_block__			*zone[3];
-		void									*zone_addr[3];
-};
+	int							is_init;
+	t__malloc_options__			options;
+	t__malloc_block__			*zone[3];
+	void						*zone_addr[3];
+}								t__malloc_instance__;
 
 struct							s__malloc_thread_safe__
 {
-	pthread_mutex_t 			global;
-	pthread_mutex_t 			zone[3];
+	pthread_mutex_t				global;
+	pthread_mutex_t				zone[3];
 };
 
 void							init(void);
@@ -149,6 +164,7 @@ void							show_alloc_mem(void);
 void							show_alloc_mem_ex(void);
 void							show_last_alloc_mem(void);
 void							show_alloc_mem_zone(int zone);
-size_t 						get_size_according_to_quantum_zone(size_t size, int zone);
+size_t							get_size_according_to_quantum_zone(
+													size_t size, int zone);
 
 #endif

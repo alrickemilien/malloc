@@ -1,6 +1,6 @@
 #include "malloc.h"
 
-struct s__malloc_instance__ g__malloc_instance__ = {0, { { 0, 0 }, { 0, 0, 0 }, {0,0,0,0,0,0,0,0,0}, 0 }, { 0, 0, 0 }, { 0, 0, 0 }};
+t__malloc_instance__ g__malloc_instance__ = {0, { { 0, 0 }, { 0, 0, 0 }, {0,0,0,0,0,0,0,0,0}, 0 }, { 0, 0, 0 }, { 0, 0, 0 }};
 struct s__malloc_thread_safe__ g__malloc_thread_safe__ = {
 								PTHREAD_MUTEX_INITIALIZER,
 								{

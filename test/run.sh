@@ -1,5 +1,5 @@
 #!/bin/sh
-export LIB_PATH=$(pwd)
+LIB_PATH=$(pwd)
 
 if [ $(uname -s) = "Linux" ]; then
   export LD_PRELOAD=$LIB_PATH/libft_malloc.so

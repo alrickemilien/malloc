@@ -1,3 +1,0 @@
-#!/bin/bash
-
-gcc $@ -lft_malloc -L ../ -lft -L ../libft -I ../libft -Wall -Wextra -Werror

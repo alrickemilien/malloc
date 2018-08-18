@@ -31,8 +31,7 @@ SRC=src/utils.c \
 	src//free.c \
 	src/calloc.c \
 	src/realloc.c \
-	src/print_memory.c \
-	src/show_alloc_mem_zone.c \
+	src/print_memory.c
 
 OBJ=$(SRC:.c=.o)
 

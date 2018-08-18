@@ -3,4 +3,5 @@
 *.a
 a.out
 *.so
-t
+test*
+!test
