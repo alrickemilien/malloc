@@ -22,7 +22,7 @@ DIR_LIBFT= libft
 
 LPTHREAD= -lpthread
 
-LIBFT= -lft -L $(DIR_LIBFT) -I $(DIR_LIBFT)
+LIBFT= -lft -L $(DIR_LIBFT)
 
 
 SRC=src/utils.c \
@@ -37,7 +37,7 @@ SRC=src/utils.c \
 
 OBJ=$(SRC:.c=.o)
 
-INCLUDE=-I src/include
+INCLUDE=-I include -I $(DIR_LIBFT)
 
 .PHONY: all clean fclean
 
@@ -45,7 +45,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	@make -C $(DIR_LIBFT)
-	@gcc $^ $(SO_OPTIONS) -o $@ $(INCLUDE) \
+	@gcc $^ $(SO_OPTIONS) -o $@ \
 	$(LIBFT) $(LPTHREAD) $(CCFLAGS)
 	@ln -sf $(NAME) libft_malloc.so
 

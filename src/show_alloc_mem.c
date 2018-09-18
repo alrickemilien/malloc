@@ -30,6 +30,24 @@ static void		print_zone(t__malloc_block__ *ptr, int *total)
 	}
 }
 
+static void		print_zone_ex(t__malloc_block__ *ptr, int *total)
+{
+	while (ptr)
+	{
+		if (!ptr->is_free)
+		{
+			put_addr(ptr + 1);
+			ft_putstr(" - ");
+			put_addr(((void*)(ptr + 1) + (size_t)ptr->size));
+			ft_putstr(" : ");
+			ft_putnbr(ptr->size);
+			ft_putstr(" octets\n");
+			*total += sizeof(t__malloc_block__) + ptr->size;
+		}
+		ptr = ptr->next;
+	}
+}
+
 static void		print_zone_name(int i)
 {
 	if (i == __MALLOC_LARGE__)
@@ -96,7 +114,7 @@ void			show_alloc_mem_ex(void)
 			else
 				put_addr(g__malloc_instance__.zone[i]);
 			write(1, "\n", 1);
-			print_zone(g__malloc_instance__.zone[i],
+			print_zone_ex(g__malloc_instance__.zone[i],
 				&total);
 		}
 		i++;

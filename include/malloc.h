@@ -13,7 +13,7 @@
 #ifndef MALLOC_H
 # define MALLOC_H
 
-# include "../../libft/libft.h"
+# include "libft.h"
 # include <sys/mman.h>
 # include <sys/resource.h>
 # include <pthread.h>
@@ -50,6 +50,8 @@
 # define __MALLOC_TINY__			0
 # define __MALLOC_SMALL__			1
 # define __MALLOC_LARGE__			2
+
+# define SIZE_MAX 1000000000000
 
 /*
 ** If set, free sets each byte of every released block to the value 0x55.
