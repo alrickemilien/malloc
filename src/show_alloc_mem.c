@@ -24,6 +24,7 @@ static void		print_zone(t__malloc_block__ *ptr, int *total)
 			ft_putstr(" : ");
 			ft_putnbr(ptr->size);
 			ft_putstr(" octets\n");
+
 			*total += sizeof(t__malloc_block__) + ptr->size;
 		}
 		ptr = ptr->next;
@@ -42,6 +43,7 @@ static void		print_zone_ex(t__malloc_block__ *ptr, int *total)
 			ft_putstr(" : ");
 			ft_putnbr(ptr->size);
 			ft_putstr(" octets\n");
+
 			*total += sizeof(t__malloc_block__) + ptr->size;
 		}
 		ptr = ptr->next;
@@ -76,9 +78,10 @@ void			show_alloc_mem(void)
 				put_addr(g__malloc_instance__.zone_addr[i]);
 			else
 				put_addr(g__malloc_instance__.zone[i]);
+
 			write(1, "\n", 1);
-			print_zone(g__malloc_instance__.zone[i],
-				&total);
+
+			print_zone(g__malloc_instance__.zone[i], &total);
 		}
 		i++;
 	}
@@ -113,9 +116,10 @@ void			show_alloc_mem_ex(void)
 				put_addr(g__malloc_instance__.zone_addr[i]);
 			else
 				put_addr(g__malloc_instance__.zone[i]);
+
 			write(1, "\n", 1);
-			print_zone_ex(g__malloc_instance__.zone[i],
-				&total);
+
+			print_zone_ex(g__malloc_instance__.zone[i], &total);
 		}
 		i++;
 	}

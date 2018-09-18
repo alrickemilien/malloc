@@ -58,7 +58,9 @@ static int							is_ptr_valid(
 			&& (size_t)block < ((size_t)instance->zone_addr[__MALLOC_SMALL__]
 				+ __MALLOC_SMALL_ZONE_SIZE__))))
 		return (0);
+
 	m = __MALLOC_TINY__;
+
 	while (m <= __MALLOC_LARGE__)
 	{
 		tmp = instance->zone[m];
@@ -70,6 +72,7 @@ static int							is_ptr_valid(
 		}
 		m++;
 	}
+
 	return (0);
 }
 
@@ -88,6 +91,7 @@ static void							unmap_large(
 	t__malloc_block__					*tmp;
 
 	tmp = g__malloc_instance__->zone[__MALLOC_LARGE__];
+
 	if (block == g__malloc_instance__->zone[__MALLOC_LARGE__])
 		g__malloc_instance__->zone[__MALLOC_LARGE__] = block->next;
 	else
@@ -96,6 +100,7 @@ static void							unmap_large(
 			tmp = tmp->next;
 		tmp->next = block->next;
 	}
+
 	munmap(block,
 			(size_t)block->size + sizeof(t__malloc_block__));
 }
@@ -121,16 +126,25 @@ void								free(void *ptr)
 
 	if (!ptr)
 		return ;
+
 	block = (t__malloc_block__*)ptr - 1;
+
 	if (!is_ptr_valid(block, &g__malloc_instance__))
 		return ;
+
 	macro = get_zone(block->size);
+
 	LOCK(&g__malloc_thread_safe__.zone[macro]);
+
 	block->is_free = 1;
+
 	if (g__malloc_instance__.options.malloc_env_vars[MALLOCSCRIBBLE])
 		ft_memset(ptr, 0x55, (size_t)(block->size));
+
 	if (block->size > __MALLOC_SMALL_LIMIT__)
 		unmap_large(&g__malloc_instance__, block);
+
 	UNLOCK(&g__malloc_thread_safe__.zone[macro]);
+
 	return ;
 }

@@ -21,7 +21,9 @@ static void	print(size_t mask, size_t addr, int i)
 		write(1, "0", 1);
 		return ;
 	}
+
 	write(1, "0x", 2);
+
 	while (mask)
 	{
 		write(1, str + ((mask & addr) >> i), 1);
@@ -39,6 +41,7 @@ void		put_addr(void *ptr)
 	mask = 0xF000000000000000;
 	addr = (size_t)ptr;
 	i = 60;
+
 	while (mask)
 	{
 		if (((mask & addr) >> i))
@@ -46,5 +49,6 @@ void		put_addr(void *ptr)
 		mask >>= 4;
 		i -= 4;
 	}
+
 	print(mask, addr, i);
 }

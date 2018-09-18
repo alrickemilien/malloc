@@ -38,10 +38,12 @@ static void		*alloc_large(size_t size, int *malloc_env_vars)
 						MAP_ANON | MAP_PRIVATE, -1, 0)) == MAP_FAILED)
 			return (NULL);
 	}
+
 	if (!(new_block = mmap(p, size + sizeof(t__malloc_block__),
 					PROT_READ | PROT_WRITE,
 					MAP_ANON | MAP_PRIVATE, -1, 0)))
 		return (NULL);
+
 	if (malloc_env_vars[MALLOCGUARDEDGES]
 			&& !malloc_env_vars[MALLOCDONOTPROTECTPRELUDE])
 	{
@@ -51,6 +53,7 @@ static void		*alloc_large(size_t size, int *malloc_env_vars)
 						-1, 0)) == MAP_FAILED)
 			return (NULL);
 	}
+
 	return (new_block);
 }
 
@@ -71,6 +74,7 @@ static void		*search_freed_block(
 		}
 		tmp = tmp->next;
 	}
+
 	return (NULL);
 }
 
@@ -91,13 +95,16 @@ static void		*new_block(
 	else
 	{
 		new_block = (void*)(*block + 1) + (*block)->size;
+
 		if ((tmp = search_freed_block(block, size)))
 			return (tmp);
 	}
+
 	new_block->size = size;
 	new_block->is_free = 0;
 	new_block->next = *block;
 	*block = new_block;
+
 	return (new_block + 1);
 }
 
@@ -107,16 +114,20 @@ void			*malloc(size_t size)
 	extern struct s__malloc_thread_safe__	g__malloc_thread_safe__;
 	void									*ret;
 	int										macro;
-	struct rlimit							rlim;
 
-	if (getrlimit(RLIMIT_DATA, &rlim) > 0 && (size_t)rlim.rlim_max < size)
-		return (NULL);
 	if (!g__malloc_instance__.is_init)
 		init();
+
+	if (size > g__malloc_instance__.options.absolute_max_size)
+		return (NULL);
+
 	macro = get_zone(size);
+
 	if (!g__malloc_instance__.zone[macro] && !init_zone(macro))
 		return (NULL);
+
 	LOCK(&g__malloc_thread_safe__.zone[macro]);
+
 	if (!(ret = new_block(&g__malloc_instance__,
 					&g__malloc_instance__.zone[macro],
 					get_size_according_to_quantum_zone(size, macro))))
@@ -124,8 +135,11 @@ void			*malloc(size_t size)
 		UNLOCK(&g__malloc_thread_safe__.zone[macro]);
 		return (NULL);
 	}
+
 	if (g__malloc_instance__.options.malloc_env_vars[MALLOCPRESCRIBBLE])
 		ft_memset(ret, 0xAA, ((t__malloc_block__*)ret - 1)->size);
+
 	UNLOCK(&g__malloc_thread_safe__.zone[macro]);
+
 	return (ret);
 }

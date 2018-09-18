@@ -18,6 +18,7 @@ void	ft_putnbr_hex(int octet, int rem)
 
 	if (rem > 1)
 		ft_putnbr_hex(octet >> 4, rem - 1);
+
 	write(1, base + (octet % 16), 1);
 }
 
@@ -33,6 +34,7 @@ void	ft_print_octets(unsigned char const *addr, size_t size, size_t i)
 			write(1, " ", 1);
 		a++;
 	}
+
 	while (a < 16)
 	{
 		write(1, "  ", 2);
